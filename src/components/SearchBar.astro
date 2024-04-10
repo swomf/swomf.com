@@ -1,11 +1,12 @@
 ---
-import { getCollection } from 'astro:content';
-import Search from './Search';
-const postCollection = await getCollection('blog');
-const posts = postCollection.map((post: { slug: any; data: any; }) => ({
-    params: { slug: post.slug },
-    props: post.data,
+import { getCollection } from "astro:content";
+import Search from "./Search";
+const postCollection = await getCollection("blog");
+const posts = postCollection.map((post: { slug: any; data: any }) => ({
+  params: { slug: post.slug },
+  props: post.data,
 }));
 // const posts = allPosts.filter(post => (!post.frontmatter.draft && post.frontmatter.slug));
 ---
-<Search client:load searchList={posts}></Search>
+
+<Search client:load searchList={posts} />
