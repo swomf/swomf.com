@@ -5,9 +5,11 @@
  */
 
 :root {
-	--accent: #2337ff;
-	--accent-dark: #000d8a;
-	--black: 15, 18, 25;
+	--accent: #ad408e;
+	/* --accent-dark: #000d8a; */
+	--black: #121414;
+	--blacker: #0d0e0e;
+	--white: #e8e6e3;
 	--gray: 96, 115, 159;
 	--gray-light: 229, 233, 240;
 	--gray-dark: 34, 41, 57;
@@ -16,31 +18,42 @@
 		0 16px 32px rgba(var(--gray), 33%);
 }
 @font-face {
-	font-family: 'Atkinson';
-	src: url('/fonts/atkinson-regular.woff') format('woff');
+	font-family: 'Hack-Regular';
+	/* src: url('/fonts/SauceCodeProNerdFont-SemiBold.ttf') format('truetype'); */
+	src: url('/fonts/Hack-Regular.ttf') format('truetype');
 	font-weight: 400;
 	font-style: normal;
 	font-display: swap;
 }
-@font-face {
-	font-family: 'Atkinson';
-	src: url('/fonts/atkinson-bold.woff') format('woff');
-	font-weight: 700;
-	font-style: normal;
-	font-display: swap;
-}
 body {
-	font-family: 'Atkinson', sans-serif;
+	font-family: 'Hack', 'Hack-Regular', monospace;
 	margin: 0;
 	padding: 0;
 	text-align: left;
-	background: linear-gradient(var(--gray-gradient)) no-repeat;
+	background: var(--black);
 	background-size: 100% 600px;
 	word-wrap: break-word;
 	overflow-wrap: break-word;
-	color: rgb(var(--gray-dark));
-	font-size: 20px;
-	line-height: 1.7;
+	color: var(--white);
+	font-size: 14px;
+	/* line-height: 1.7; */
+	letter-spacing: 0.01em;
+}
+a, a:link {
+	color: #75c9da;
+	text-decoration: none;
+	/* text-decoration: dashed underline; */
+}
+a:visited {
+	color: #ad408e;
+}
+a:hover {
+	color: #75c9da;
+
+	/* text-decoration: underline; */
+}
+a:active {
+	color: #75c9da;
 }
 main {
 	width: 720px;
@@ -106,7 +119,7 @@ img {
 }
 code {
 	padding: 2px 5px;
-	background-color: rgb(var(--gray-light));
+	background-color: var(--blacker);
 	border-radius: 2px;
 }
 pre {
