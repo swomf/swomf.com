@@ -1,0 +1,32 @@
+---
+import { getCollection } from "astro:content";
+import BaseHead from "../../components/BaseHead.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+
+import { SITE_TITLE, SITE_DESCRIPTION } from "../../consts";
+import Tag from "../../components/Tags.astro";
+
+const posts = await getCollection("blog");
+
+const getUniqueTags = (posts: any[]) => {
+  const allTags = posts.flatMap((post: any) => post.data.tags);
+  return [...new Set(allTags)];
+};
+
+const tags = getUniqueTags(posts);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+  </head>
+  <body>
+    <Header />
+    <main>
+      <Tag tags={tags} />
+    </main>
+    <Footer />
+  </body>
+</html>

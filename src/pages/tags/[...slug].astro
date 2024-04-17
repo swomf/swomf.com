@@ -1,0 +1,98 @@
+---
+import { type CollectionEntry, getCollection } from "astro:content";
+import { POSTS_PER_PAGE, SITE_DESCRIPTION, SITE_TITLE } from "../../consts";
+import BaseHead from "../../components/BaseHead.astro";
+import Footer from "../../components/Footer.astro";
+import Header from "../../components/Header.astro";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("blog");
+
+  const uniqueTags: Set<string> = new Set(
+    posts.flatMap((post: CollectionEntry<"blog">) => post.data.tags as string)
+  );
+
+  const staticPages: any[] = [];
+
+  uniqueTags.forEach((tag: string) => {
+    const postsByTag: CollectionEntry<"blog">[] = posts.filter((post: any) =>
+      post.data.tags.includes(tag)
+    );
+
+    let slices = [];
+    for (let i = 0; i < postsByTag.length; i += POSTS_PER_PAGE) {
+      slices.push(postsByTag.slice(i, i + POSTS_PER_PAGE));
+    }
+
+    for (let i = 0; i < slices.length; i++) {
+      let slug, precedingSlug, succeedingSlug;
+      const pageNumber = i + 1;
+      precedingSlug = `${tag}/${pageNumber - 1}`;
+      slug = `${tag}/${pageNumber}`;
+      succeedingSlug = `${tag}/${pageNumber + 1}`;
+      if (pageNumber === 1) {
+        slug = `${tag}`;
+        precedingSlug = "";
+      }
+      if (pageNumber === 2) {
+        precedingSlug = `${tag}`;
+      }
+      if (pageNumber === slices.length) {
+        succeedingSlug = "";
+      }
+      staticPages.push({
+        params: { slug },
+        props: {
+          posts: slices[i],
+          precedingSlug,
+          succeedingSlug,
+        },
+      });
+    }
+  });
+  return staticPages;
+}
+
+// const { slug } = Astro.params;
+const { posts, precedingSlug, succeedingSlug } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+  </head>
+  <body>
+    <Header />
+    <main>
+      {
+        posts.map((post: any) => (
+          <ul>
+            <a href={`/blog/${post.slug}/`}>{post.data.title}</a>
+          </ul>
+        ))
+      }
+      <div class="navigation">
+        {
+          (precedingSlug && <a href={`/tags/${precedingSlug}`}>prev</a>) || (
+            <>prev</>
+          )
+        }
+        {
+          (succeedingSlug && <a href={`/tags/${succeedingSlug}`}>next</a>) || (
+            <>next</>
+          )
+        }
+      </div>
+    </main>
+
+    <style lang="css">
+      .navigation {
+        display: flex;
+        justify-content: flex-start;
+        gap: 1rem;
+      }
+    </style>
+    <Footer />
+  </body>
+</html>
