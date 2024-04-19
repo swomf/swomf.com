@@ -7,5 +7,5 @@ rm -rf dist/*
 pnpm build
 cd dist
 git add --all
-git commit -m "$(date --iso-8601=hours)"
+git commit -m "$(git log --pretty=format:'%H' -n 1)"
 git push
