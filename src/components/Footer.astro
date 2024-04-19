@@ -1,11 +1,13 @@
 ---
-const today = new Date();
+// const today = new Date();
 ---
 
-<footer>
-  &copy; {today.getFullYear()} swomf gplv3
-  <div class="social-links">
-    <a href="https://github.com/swomf" target="_blank">
+<div id="footer" class="bottom-0">
+  <div id="github" class="flex left-2 bottom-2 fixed">
+    <a
+      href="https://github.com/swomf"
+      class="text-[var(--white)] hover:text-[var(--accent)]"
+    >
       <span class="sr-only">swomf's github</span>
       <svg
         viewBox="0 0 16 16"
@@ -20,24 +22,8 @@ const today = new Date();
       >
     </a>
   </div>
-</footer>
-<style>
-  footer {
-    padding: 0.5em 0.5em;
-    color: rgb(var(--gray));
-    text-align: right;
-  }
-  .social-links {
-    position: fixed;
-    left: 0.5em;
-    bottom: 0.5em;
-    display: flex;
-  }
-  .social-links a {
-    text-decoration: none;
-    color: var(--white);
-  }
-  .social-links a:hover {
-    color: var(--accent);
-  }
-</style>
+  <!-- <span class="text-right">
+      &copy; {today.getFullYear()} swomf gplv3
+    </span>
+  </span> -->
+</div>

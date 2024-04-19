@@ -16,7 +16,7 @@ const posts = (await getCollection("blog")).sort(
 <html lang="en">
   <head>
     <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-    <style>
+    <!-- <style>
       main {
         width: 960px;
       }
@@ -84,42 +84,39 @@ const posts = (await getCollection("blog")).sort(
           font-size: 1.563em;
         }
       }
-    </style>
+    </style> -->
   </head>
   <body>
     <Header />
-    <main>
-      <section>
-        <ul>
-          {
-            posts.map(
-              (post: {
-                slug: any;
-                data: {
-                  heroImage: string | null | undefined;
-                  title: unknown;
-                  pubDate: Date;
-                };
-              }) => (
-                <li>
-                  <a href={`/blog/${post.slug}/`}>
-                    <img
-                      width={720}
-                      height={360}
-                      src={post.data.heroImage}
-                      alt=""
-                    />
-                    <h4 class="title">{post.data.title}</h4>
-                    <p class="date">
-                      <FormattedDate date={post.data.pubDate} />
-                    </p>
-                  </a>
-                </li>
-              )
-            )
-          }
-        </ul>
-      </section>
+    <main class="grid grid-cols-2 gap-4">
+      {
+        posts.map(
+          (post: {
+            slug: any;
+            data: {
+              heroImage: string | null | undefined;
+              title: unknown;
+              pubDate: Date;
+            };
+          }) => (
+            <div>
+              <a href={`/blog/${post.slug}/`}>
+                <img
+                  class="rounded-xl"
+                  width={720}
+                  height={360}
+                  src={post.data.heroImage}
+                  alt=""
+                />
+                <h4 class="title">{post.data.title}</h4>
+                <p class="date">
+                  <FormattedDate date={post.data.pubDate} />
+                </p>
+              </a>
+            </div>
+          )
+        )
+      }
     </main>
     <Footer />
   </body>

@@ -1,59 +1,27 @@
 ---
-import HeaderLink from "./HeaderLink.astro";
 import { SITE_TITLE } from "../consts";
+const urlSegments = Astro.url.pathname.split("/");
+const activeNav = urlSegments.slice(1, 2)[0] || "";
 ---
 
-<header>
-  <nav>
-    <h2><a href="/">{SITE_TITLE}</a></h2>
+<header
+  class="my-2 rounded-xl flex p-2 flex-col items-center justify-between sm:flex-row
+bg-[var(--blacker)] w-full"
+>
+  <nav class="flex justify-between items-center w-full px-2">
+    <a href="/">{SITE_TITLE}</a>
     <div class="internal-links">
-      <HeaderLink href="/">home</HeaderLink>
-      <HeaderLink href="/tags">tags</HeaderLink>
-      <HeaderLink href="/blog">blog</HeaderLink>
+      <a href="/" class={activeNav === "" ? "active" : ""}>home</a>
+      <a href="/tags" class={activeNav === "tags" ? "active" : ""}>tags</a>
+      <a href="/blog" class={activeNav === "blog" ? "active" : ""}>blog</a>
     </div>
   </nav>
 </header>
 <style>
-  header {
-    width: 720px;
-    max-width: calc(100% - 2em);
-    margin: 1em auto;
-    padding: 0.9em;
-    background: var(--blacker);
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(var(--black), 5%);
-  }
-  h2 {
-    margin: 0;
-    font-size: 1em;
-  }
-
-  h2 a,
-  h2 a.active {
-    text-decoration: none;
-  }
-  nav {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
   nav a {
-    padding: 0.2em 0.5em;
-    color: var(--white);
-    border-bottom: 4px solid transparent;
-    text-decoration: none;
+    @apply inline-block text-[var(--white)] p-0 text-sm hover:text-[var(--accent)];
   }
   nav a.active {
-    text-decoration: none;
-    border-bottom-color: var(--accent);
-  }
-  .social-links,
-  .social-links a {
-    display: flex;
-  }
-  @media (max-width: 720px) {
-    .social-links {
-      display: none;
-    }
+    @apply border-b-4 border-b-[var(--accent)];
   }
 </style>
