@@ -10,6 +10,7 @@ body {
   --blacker: #0d0e0e;
   --white: #e8e6e3;
   --blue: #408ce3;
+  --dark-blue: #2062ad;
   @apply flex min-h-[100svh] min-w-[720px] flex-col font-mono max-w-[720px] mx-auto
   bg-[var(--black)] text-[var(--white)]
   selection:bg-[var(--white)] selection:bg-opacity-70 selection:text-[var(--black)]
@@ -35,52 +36,16 @@ body {
   font-style: normal;
   font-display: swap;
 }
-/* a hrefs are in a @layer in case we want to
- * override with a different highlight
- * e.g. Footer.astro
- */
-@layer components {
-  .a,
-  .prose a {
-    @apply outline-2 outline-offset-1 no-underline
-    text-[var(--blue)];
-  }
-  .a:visited,
-  .prose a:visited {
-    @apply text-[var(--accent)];
-  }
-  .a:hover,
-  .prose a:hover {
-    @apply underline-offset-auto text-[var(--accent2)];
-  }
+.a, a:visited, a:hover, .prose a, .prose a:visited, .prose a:hover {
+  @apply outline-2 outline-offset-1 no-underline visited:text-[var(--blue)] hover:text-[var(--accent)] text-[var(--blue)];
+}
+.prose * {
+  @apply text-[var(--white)];
 }
 .prose {
-  @apply p-0 m-0
-  prose-img:rounded-xl
+  @apply prose-img:rounded-xl
   min-w-full max-w-none
-  text-sm leading-5 text-[var(--white)]
-
-  /* bloated */
-  prose-code:text-[var(--white)]
-  prose-th:text-[var(--white)]
-  prose-td:text-[var(--white)]
-  prose-p:text-[var(--white)]
-  prose-a:text-[var(--white)]
-  prose-figure:text-[var(--white)]
-  prose-figcaption:text-[var(--white)]
-  prose-strong:text-[var(--white)]
-  prose-em:text-[var(--white)]
-  prose-pre:text-[var(--white)]
-  prose-ol:text-[var(--white)]
-  prose-ul:text-[var(--white)]
-  prose-li:text-[var(--white)]
-  prose-table:text-[var(--white)]
-  prose-thead:text-[var(--white)]
-  prose-tr:text-[var(--white)]
-  prose-img:text-[var(--white)]
-  prose-video:text-[var(--white)]
-  prose-hr:text-[var(--white)]
-  prose-headings:text-[var(--white)];
+  text-sm leading-5
 }
 .input {
   @apply bg-[var(--blacker)]
