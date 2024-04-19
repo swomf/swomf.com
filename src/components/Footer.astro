@@ -1,8 +1,8 @@
 ---
-// const today = new Date();
+const today = new Date();
 ---
 
-<div id="footer" class="bottom-0">
+<div id="footer" class="bottom-0 h-12">
   <div id="github" class="flex left-2 bottom-2 fixed">
     <a
       href="https://github.com/swomf"
@@ -22,8 +22,15 @@
       >
     </a>
   </div>
-  <!-- <span class="text-right">
+  <!-- <div class="bottom-0 flex-auto p-0">
+      <p class="absolute right-2 text-sm">
       &copy; {today.getFullYear()} swomf gplv3
-    </span>
-  </span> -->
+    </p>
+  </div> -->
 </div>
+
+<style>
+  #footer {
+    @apply flex-auto;
+  }
+</style>
