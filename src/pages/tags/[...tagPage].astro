@@ -69,6 +69,7 @@ const { posts, precedingSlug, succeedingSlug } = Astro.props;
         posts.map((post: any) => (
           <ul>
             <a href={`/blog/${post.slug}/`}>{post.data.title}</a>
+            <p class="ml-10">{post.data.description}</p>
           </ul>
         ))
       }
