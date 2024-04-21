@@ -9,4 +9,5 @@ const posts = postCollection.map((post: { slug: any; data: any }) => ({
 // const posts = allPosts.filter(post => (!post.frontmatter.draft && post.frontmatter.slug));
 ---
 
+
 <Search client:load searchList={posts} />

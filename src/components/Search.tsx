@@ -32,12 +32,12 @@ function Search({ searchList }: SearchProps) {
 
   return (
     <>
-      <label>Search</label>
       <input
         type="text"
         value={query}
         onChange={handleOnSearch}
         placeholder="Search posts"
+        className="border p-1 bg-[var(--black)] focus:outline-none focus:border-[var(--accent)]"
       />
       {query.length > 1 && (
         <p>
