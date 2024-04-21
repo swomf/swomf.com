@@ -1,0 +1,9 @@
+GIMP
+
+Paintbrush
+    Mode     normal
+    Size     19
+    Spacing  1
+    Hardness 100
+    Force    50
+    Color    #FFFFFF
