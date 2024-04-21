@@ -9,7 +9,7 @@ export async function getStaticPaths() {
   const posts = await getCollection("blog");
 
   const uniqueTags: Set<string> = new Set(
-    posts.flatMap((post: CollectionEntry<"blog">) => post.data.tags as string)
+    posts.flatMap((post: CollectionEntry<"blog">) => post.data.tags)
   );
 
   const staticPages: any[] = [];
