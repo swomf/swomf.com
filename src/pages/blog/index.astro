@@ -105,14 +105,13 @@ const posts = (await getCollection("blog")).sort(
                 <img
                   class="rounded-xl"
                   width={720}
-                  height={360}text-right
+                  height={360}
+                  text-right
                   src={post.data.heroImage}
                   alt=""
                 />
                 <h4>{post.data.title}</h4>
-                <p class="text-sm">
-                  {post.data.description}
-                </p>
+                <p class="text-sm">{post.data.description}</p>
                 <p class="text-sm">
                   <FormattedDate date={post.data.pubDate} />
                 </p>
