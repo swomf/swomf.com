@@ -47,6 +47,10 @@ body {
   min-w-full max-w-none
   text-sm leading-5
 }
+mark, .prose mark {
+  @apply bg-[var(--white)] text-[var(--black)]
+  selection:bg-[var(--black)] selection:bg-opacity-70 selection:text-[var(--white)];
+}
 .input {
   @apply bg-[var(--blacker)]
   text-[var(--white)];
