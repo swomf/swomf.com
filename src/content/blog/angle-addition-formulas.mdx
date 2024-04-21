@@ -1,0 +1,163 @@
+---
+title: "Angle addition formulas"
+description: "Pictorialize the basic angle addition formulas, then derive the rest"
+tags:
+  - math
+pubDate: "Apr 21 2024"
+heroImage: "/blog-placeholder-3.jpg"
+---
+
+To find out $sin(\alpha+b)$, let's build a diagram of
+what we're actually, trigonometrically doing.
+
+<div class="grid grid-cols-2 gap-4">
+  <img src="/pictures/angle-addition-formulas-01.svg" alt="1" class="mx-auto"/>
+  <div>
+    Let's make a triangle with angle $\beta$ on it.
+    
+    If its hypotenuse is some number $H$, then:  
+    $opposite=H \bullet sin(\beta)$  
+    $adjacent=H \bullet cos(\beta)$  
+
+    Keep this in mind for later.
+  </div>
+  <img src="/pictures/angle-addition-formulas-02.svg" alt="2" class="mx-auto"/>
+  <div>
+    On top of its hypotenuse, let's add a triangle with angle $\alpha$ on it.
+
+    Using the same intuition from $\triangle\beta$,
+    we could figure out its sides, given its hypotenuse...
+  </div>
+  <img src="/pictures/angle-addition-formulas-03.svg" alt="2" class="mx-auto"/>
+  <div>
+    What's this? Just by stacking triangles, we've made a
+    third triangle out of $\alpha + \beta$! Let's just draw
+    a dotted line so that we realize it's there.
+
+    Remember the intuition we talked about, where all we
+    need is the hypotenuse to find the sides?
+  </div>
+  <img src="/pictures/angle-addition-formulas-04.svg" alt="2" class="mx-auto"/>
+  <div>
+    Let's set the hypotenuse of $\triangle(\alpha+\beta)$
+    to $1$. This way, if we find its sides, we'll have
+    *both*:  
+
+    $1 \bullet cos(\alpha+\beta)$  
+    $1 \bullet sin(\alpha+\beta)$  
+
+    Immaculate.
+  </div>
+  <img src="/pictures/angle-addition-formulas-05.svg" alt="2" class="mx-auto"/>
+  <div>
+    However, when we extend the logic to $\triangle\beta$,
+    we notice that our goal, the sides of
+    $\triangle(\alpha+\beta)$, is still out of reach.  
+
+    Now, we have to get *crafty.* Let's get the *very top angle*.
+  </div>
+  <img src="/pictures/angle-addition-formulas-06.svg" alt="2" class="mx-auto"/>
+  <div>
+    If we think back to geometry, we can draw a line
+    parallel to the bottom line to discover a secret 4th
+    right triangle. Parallel lines crossed by a
+    transversal!  
+
+    Now all we do is hop between $\beta$ and $90-\beta$
+    to get to the top.
+  </div>
+  <img src="/pictures/angle-addition-formulas-07.svg" alt="2" class="mx-auto"/>
+  <div>
+    With $\angle\beta$ and the hypotenuse $sin(\alpha)$,
+    we solve for the sides of our 4th triangle...  
+    
+    And just like that, we have the final things we
+    need to solve for $\triangle(\alpha+\beta)$.
+  </div>
+  <img src="/pictures/angle-addition-formulas-08.svg" alt="2" class="mx-auto"/>
+  <div>
+    Let's do addition and subtraction!
+
+    $cos(\alpha+\beta)=cos\alpha cos\beta - sin\alpha sin\beta$  
+
+    $sin(\alpha+\beta)=sin\alpha cos\beta + cos\alpha sin\beta$
+
+    For the basic angle-addition formulas, $Q.E.D.$~
+  </div>
+</div>
+
+## Not tired yet? Let's use what we have to derive the others!
+
+The other formulas simply build off of these two.
+Just remember that sine waves are odd functions and
+cosine waves are even functions.
+$$
+\begin{align}
+sin(-\theta) &= -sin(\theta) \notag \\
+cos(-\theta) &= cos(\theta) \notag
+\end{align}
+$$
+
+With this, the angle-subtraction formulas come in easy.
+
+$$
+\begin{align}
+cos(\alpha + -\beta) &= cos(\alpha) cos(\beta) - sin(\alpha) sin(-\beta) \notag \\
+cos(\alpha - \beta)  &= cos\alpha cos\beta - sin\alpha (-sin\beta) \notag \\
+cos(\alpha - \beta)  &= cos\alpha cos\beta + sin\alpha sin\beta \notag \\
+\notag \\
+sin(\alpha + -\beta) &= sin(\alpha) cos(-\beta) + cos(\alpha) sin(-\beta) \notag \\
+sin(\alpha - \beta)  &= sin\alpha cos\beta - cos\alpha sin\beta \notag \\
+\end{align}
+$$
+
+And since the tangent of an angle is just $sin\theta \div cos\theta$,
+tangent comes in easy too.
+
+$$
+\begin{align}
+tan(\alpha + \beta) &= \frac{
+  sin(\alpha + \beta)
+}{
+  cos(\alpha + \beta)
+} \notag \\
+tan(\alpha + \beta) &= \frac{
+  sin\alpha cos\beta + cos\alpha sin\beta
+}{
+  cos\alpha cos\beta - sin\alpha sin\beta
+} \notag \\
+tan(\alpha + \beta) &= \frac{
+  (cos\alpha cos\beta)(
+    \frac{sin\alpha cos\beta}{cos\alpha cos\beta} +
+    \frac{cos\alpha sin\beta}{cos\alpha cos\beta})
+}{
+  (cos\alpha cos\beta)(
+    \frac{cos\alpha cos\beta}{cos\alpha cos\beta} -
+    \frac{sin\alpha sin\beta}{cos\alpha cos\beta}
+  )
+} \notag \\
+tan(\alpha + \beta) &= \frac{
+  tan\alpha - tan\beta
+}{
+  1 + tan\alpha tan\beta
+} \notag
+\end{align}
+$$
+
+Though we could do this same procedure with $sin(\alpha - \beta)$
+and $cos(\alpha - \beta)$, it's easier to recognize that tangents are even functions.  
+$$
+\begin{align}
+tan(-\theta) &= -tan(\theta) \notag \\
+tan(\alpha + -\beta) &= \frac{
+  tan\alpha - tan(-\beta)
+}{
+  1 + tan\alpha tan(-\beta)
+} \notag \\
+tan(\alpha - \beta) &= \frac{
+  tan\alpha + tan\beta
+}{
+  1 - tan\alpha tan\beta
+} \notag
+\end{align}
+$$
