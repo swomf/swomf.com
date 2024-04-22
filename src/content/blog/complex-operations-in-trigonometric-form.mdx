@@ -1,0 +1,173 @@
+---
+title: "Complex operations in trigonometric form"
+description: "From zero to DeMoivre's theorem"
+tags:
+  - math
+pubDate: "Apr 22 2024"
+heroImage: "/complex-operations-in-trigonometric-form.jpg"
+---
+
+Complex numbers are just vectors, with an x-axis of the
+real numbers and a y-axis of the imaginary $\sqrt{-1}$
+numbers. Of course, instead of a basic $(x,y)$ or $(r, \theta)$,
+we just need to include the basis vectors (the default units)
+of our axes when we talk complex. In the x-axis, this is $1$, and in the
+y-axis, this is $i = \sqrt{-1}$.
+
+"Rectangular form" is obvious: $a+bi$ comes from $(x,y)$.
+
+"Trigonometric form" is a bit funkier: $r(cos\theta + isin\theta)$ comes from...?
+
+<div class="grid grid-cols-2 gap-4">
+  <img src="/pictures/complex-operations-in-trigonometric-form-01.svg" alt="1 - Trigonometric form as SOHCAHTOA" class="mx-auto"/>
+  <div>
+    Actually, it comes from a drawing of a triangle!
+
+    First, let's draw out some complex number with
+    magnitude $r$ and angle $\theta$. Connect that
+    to the origin, and we can immediately SOHCAHTOA.
+
+    Of course, we can't just leave things at $rsin\theta$
+    and $rcos\theta$; we need to attach the basis vectors
+    on. Now, the hypotenuse's absolute value is $r$, but
+    Pythagorean Theoreming will give us an $a+bi$.
+
+  </div>
+</div>
+
+Trigonometric form isn't really used to _add_ complex
+numbers, but it sure is used to multiply them. Why?
+Well, trig identities give us the opportunity to
+add angles, letting us escape a soup of expanded $a+bi$
+binomials when we multiply. Let's see where they come from!
+
+$Let\ z_1 = r_1(cos\alpha+isin\alpha)$  
+$Let\ z_2 = r_2(cos\beta+isin\beta)$
+
+### 1. Multiplication
+
+<small>
+
+$$
+\begin{align}
+z_1 z_2 &= r_1(cos\alpha + isin\alpha) \bullet r_2(cos\beta + isin\beta) \notag \\
+  &= r_1r_2(cos\alpha cos\beta + icos\alpha sin\beta + isin\alpha cos\beta - sin\alpha sin\beta) \notag \\
+  &= r_1r_2(cos\alpha cos\beta - sin\alpha sin\beta + i(cos\alpha sin\beta + sin\alpha cos\beta))\notag \\
+z_1 z_2 &= r_1r_2(cos(\alpha + \beta) + isin(\alpha + \beta))
+\end{align}
+$$
+
+</small>
+
+Between lines 3 and 4, we used the [angle addition identities](/blog/angle-addition-formulas).
+
+### 2. Division
+
+<small>
+
+$$
+\begin{align}
+\frac{z_1}{z_2} &= \frac{r_1(cos\alpha + isin\alpha)}{r_2(cos\beta + isin\beta)} \quad \text{ Rationalize the denominator!}\notag \\
+  &= \frac{r_1(cos\alpha + isin\alpha)}{r_2(cos\beta + isin\beta)} \bullet \frac{cos\beta - isin\beta}{cos\beta - isin\beta}\notag \\
+  &= \frac{r_1}{r_2} \left(\frac{
+    cos\alpha cos\beta - icos\alpha sin\beta + isin\alpha cos\beta + sin\alpha sin\beta
+  }{
+    (cos\beta)^2 - icos\beta sin\beta + isin\beta cos\beta + (sin\beta)^2
+  }\right) \notag \\
+  &= \frac{r_1}{r_2} \left(\frac{
+    cos\alpha cos\beta + sin\alpha sin\beta + i(sin\alpha cos\beta - cos\alpha sin\beta)
+  }{
+    (cos\beta)^2 + (sin\beta)^2
+  } \right) \notag \\
+  &= \frac{r_1}{r_2} \left(\frac{
+    cos(\alpha - \beta) + isin(\alpha - \beta)
+  }{
+    1
+  }\right) \notag \\
+\frac{z_1}{z_2} &= \frac{r_1}{r_2}(cos(\alpha - \beta) + isin(\alpha - \beta))
+\end{align}
+$$
+
+</small>
+
+Between lines 4 and 5, we used the angle subtraction identities.
+
+### 3. Exponentiation (DeMoivre's Theorem)
+
+When we have multiplication, exponentiation comes by easily.
+
+<small>
+
+$$
+\begin{align}
+z_1 \bullet z_1 &= r_1r_1(cos(\alpha + \alpha) + isin(\alpha + \alpha)) \notag \\
+(z_1 \bullet z_1) \bullet z_1 &= r_1r_1r_1(cos(\alpha + \alpha + \alpha) + isin(\alpha + \alpha + \alpha)) \notag \\
+z_1^n &= r_1^n(cos(n \bullet \alpha) + isin(n \bullet \alpha))
+\end{align}
+$$
+
+</small>
+
+### 4. Rooting
+
+Rooting is a bit interesting. While we can simply supply a fractional
+exponent to a complex number for the initial part of the rule,
+
+$$
+\begin{align}
+z_1^{\frac{1}{n}} &= r_1^{\frac{1}{n}}(cos(\frac{1}{n}\alpha) + isin(\frac{1}{n}\alpha)) \notag \\
+\sqrt[n]{z_1} &= \sqrt[n]{r_1}(cos(\frac{1}{n}\alpha) + isin(\frac{1}{n}\alpha))
+\end{align}
+$$
+
+there is something else we have to consider: _multiple solutions._
+
+Usually, with some caveats, we prefer the "principal solution"
+when solving for a real number's root, i.e. <br />
+$\sqrt{4} = 2$ rather than $\sqrt{4} = -2$
+
+However, with complex numbers we have to consider _every root_. <br />
+$\sqrt{-4} = \pm 2i$
+
+<div class="grid grid-cols-2 gap-4">
+  <div>
+  Let's think about what this means, based on our exponentiation rule. Imagine
+  a complex number of some magnitude $r_0$, that has an angle of $60\degree$. <br />
+  $z_0 = r_0(cos(60\degree) + isin(60\degree))$
+
+If we want to find its cubic roots, we'll need a complex number <br />
+$z = r(cos(\theta) + isin(\theta))$ where <br />
+$r^3 = r_0$ and <br />
+$3 \bullet \theta = 60\degree$.
+
+But angles are _modular_! They wrap around a circle! <br />
+$20\degree \times 3 = 60\degree$ <br />
+$140\degree \times 3 = 420\degree \equiv 60\degree$ <br />
+$260\degree \times 3 = 780\degree \equiv 60\degree$ <br />
+
+  </div>
+  <img src="/pictures/complex-operations-in-trigonometric-form-02.svg" alt="2 - The modular equality of 60 and 420" class="mx-auto"/>
+</div>
+
+Because of the circle's modulus of 360 degrees, we therefore
+discover these properties for the solution angles of $\sqrt[n]{z}$:
+
+- They're spaced equally apart by $\frac{360}{n}$
+- The smallest angle is $\frac{\theta}{n}$, and the largest angle must be below $360\degree$
+  (because otherwise we'd just subtract $360\degree$ anyway).
+
+Hence, unless you prefer to use $2\pi$ over $360\degree$, our
+final formula will look like this:
+
+$$
+\sqrt[n]{z} = \sqrt[n]{r} \left(
+cos\left(\frac{\theta}{n} + k\frac{360}{n} \right) +
+isin\left(\frac{\theta}{n} + k\frac{360}{n} \right)
+\right)
+$$
+
+where integer
+$k \geq 0$
+and
+$k < n$
+(so that $ k\frac{360}{n} $ doesn't surpass 360).
