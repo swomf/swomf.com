@@ -36,16 +36,34 @@ body {
   font-style: normal;
   font-display: swap;
 }
-.a,
-a:visited,
-a:hover,
-.prose a,
-.prose a:visited,
-.prose a:hover {
-  @apply outline-2 outline-offset-1 no-underline visited:text-[var(--blue)] hover:text-[var(--accent)] text-[var(--blue)];
-}
-.prose * {
-  @apply text-[var(--white)];
+@layer base {
+  .a,
+  .prose a {
+    @apply no-underline text-[var(--blue)];
+  }
+  .a:hover,
+  .prose a:hover {
+    @apply text-[var(--accent)];
+  }
+  /* .a:visited, .prose a:visited {
+    @apply text-[var(--accent)];    
+  } */
+  .prose *:not(a) {
+    @apply text-[var(--white)];
+  }
+  /* .a,
+  a:visited,
+  a:hover,
+  .prose a,
+  .prose a:visited,
+  .prose a:hover {
+    @apply outline-2 outline-offset-1 no-underline visited:text-[var(--blue)] hover:text-[var(--accent)] text-[var(--blue)];
+  }
+  .prose a {
+    @apply text-[var(--blue)];
+  }
+  .prose *:not(a) {
+  } */
 }
 .prose {
   @apply prose-img:rounded-xl

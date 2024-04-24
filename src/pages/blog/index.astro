@@ -15,6 +15,11 @@ const posts = (await getCollection("blog")).sort(
 <html lang="en">
   <head>
     <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+    <style>
+      .a:hover * {
+        @apply text-[var(--accent)];
+      }
+    </style>
     <!-- <style>
       main {
         width: 960px;
@@ -91,7 +96,7 @@ const posts = (await getCollection("blog")).sort(
       {
         posts.map(post => (
           <div>
-            <a href={`/blog/${post.slug}/`}>
+            <a href={`/blog/${post.slug}/`} class="group">
               <img
                 class="rounded-xl"
                 width={720}
@@ -100,9 +105,13 @@ const posts = (await getCollection("blog")).sort(
                 src={post.data.heroImage}
                 alt=""
               />
-              <h4>{post.data.title}</h4>
-              <p class="text-sm">{post.data.description}</p>
-              <p class="text-sm">
+              <h4 class="text-[var(--blue)] group-hover:text-[var(--accent)]">
+                {post.data.title}
+              </h4>
+              <p class="text-sm text-[var(--blue)] group-hover:text-[var(--accent)]">
+                {post.data.description}
+              </p>
+              <p class="text-sm text-[var(--blue)] group-hover:text-[var(--accent)]">
                 <FormattedDate date={post.data.pubDate} />
               </p>
             </a>
