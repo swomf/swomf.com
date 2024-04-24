@@ -7,39 +7,15 @@ const { tags } = Astro.props as Props;
 ---
 
 <style>
-  .tag-list {
-    display: flex;
-    flex-wrap: wrap;
-  }
-
-  .tag-list li {
-    list-style-type: none;
-  }
-
-  .tag-list a {
-    display: inline-block;
-    margin-bottom: 0.5rem;
-    margin-right: 0.5rem;
-    border-radius: 0.25rem;
-    background-color: #4c4c4c;
-    padding: 0.125rem 0.5rem;
-    font-size: 0.75rem;
-    color: #ffffff;
-    transition-property: background-color;
-    transition-duration: 200ms;
-    text-decoration: none;
-    transition-timing-function: ease-in-out;
-  }
-
-  .tag-list a:hover {
-    background-color: #5f5f5f;
+  .tag-entry a {
+    @apply inline-block mb-2 mr-2 rounded bg-[#333333] px-2 text-xs p-0.5 text-[var(--white)] transition-colors duration-200 ease-in-out hover:bg-[#4d4d4d];
   }
 </style>
 
-<div class="tag-list">
+<div class="flex flex-wrap ml-0.5 p-0">
   {
     tags.map(tag => (
-      <li>
+      <li class="tag-entry list-none">
         <a href={`/tags/${tag}`}>{tag}</a>
       </li>
     ))
