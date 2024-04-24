@@ -67,22 +67,37 @@ const { posts, precedingSlug, succeedingSlug } = Astro.props;
     <main>
       {
         posts.map((post: any) => (
-          <ul>
-            <a href={`/blog/${post.slug}/`}>{post.data.title}</a>
+          <>
+            <a
+              class="text-[var(--blue)] hover:text-[var(--accent)]"
+              href={`/blog/${post.slug}/`}
+            >
+              {post.data.title}
+            </a>
             <p class="ml-10">{post.data.description}</p>
-          </ul>
+          </>
         ))
       }
       <nav>
         {
-          (precedingSlug && <a href={`/tags/${precedingSlug}`}>prev</a>) || (
-            <>prev</>
-          )
+          (precedingSlug && (
+            <a
+              class="text-[var(--blue)] hover:text-[var(--accent)]"
+              href={`/tags/${precedingSlug}`}
+            >
+              prev
+            </a>
+          )) || <>prev</>
         }
         {
-          (succeedingSlug && <a href={`/tags/${succeedingSlug}`}>next</a>) || (
-            <>next</>
-          )
+          (succeedingSlug && (
+            <a
+              class="text-[var(--blue)] hover:text-[var(--accent)]"
+              href={`/tags/${succeedingSlug}`}
+            >
+              next
+            </a>
+          )) || <>next</>
         }
       </nav>
     </main>
