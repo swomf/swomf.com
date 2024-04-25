@@ -26,7 +26,8 @@ watching the progress bar update, then be done with it.
 
 Nah. Let's forget this forever.
 
-[Termux](https://f-droid.org/packages/com.termux/) is a free open-source Android
+<a href="https://f-droid.org/packages/com.termux/" target="_blank">Termux</a>
+is a free open-source Android
 app that shoves a Linux terminal on your phone. It's useful for a load of tiny
 day-to-day utilities, such as `ping` to lie-detect your "four bars of WiFi",
 `yt-dlp` to borrow a couple YouTube playlists in the background, and `ffmpeg`
@@ -253,7 +254,7 @@ these `local.crt` and `local.key` files, we can actually generate the SSL
 _ad hoc_ instead, which means "on demand for a short time."
 
 > To generate local.crt and local.key see Method 2 of:
-> [kracekumar.com/post/54437887454/ssl-for-flask-local-development](kracekumar.com/post/54437887454/ssl-for-flask-local-development)  
+> <a href="https://kracekumar.com/post/54437887454/ssl-for-flask-local-development" target="_blank">kracekumar.com/post/54437887454/ssl-for-flask-local-development</a>  
 > <cite> andyandy Jun 20, 2017 at 16:42</cite>
 
 ```python
