@@ -4,6 +4,7 @@ import { POSTS_PER_PAGE, SITE_DESCRIPTION, SITE_TITLE } from "../../consts";
 import BaseHead from "../../components/BaseHead.astro";
 import Footer from "../../components/Footer.astro";
 import Header from "../../components/Header.astro";
+import FormattedDate from "../../components/FormattedDate.astro";
 
 export async function getStaticPaths() {
   const posts = await getCollection("blog");
@@ -75,6 +76,16 @@ const { posts, precedingSlug, succeedingSlug } = Astro.props;
               {post.data.title}
             </a>
             <p class="ml-10">{post.data.description}</p>
+            {post.data.updatedDate ? (
+              <p class="ml-10">
+                <FormattedDate date={post.data.pubDate} /> (upd.{" "}
+                <FormattedDate date={post.data.updatedDate} />)
+              </p>
+            ) : (
+              <p class="ml-10">
+                <FormattedDate date={post.data.pubDate} />
+              </p>
+            )}
           </>
         ))
       }

@@ -36,17 +36,17 @@ const { title, description, tags, pubDate, updatedDate, heroImage } =
         </div>
         <div class="prose">
           <div class="p-4 text-center leading-4">
-            <div class="mb-2">
+            <div class="mb-4 pb-0 text-3xl font-bold">{title}</div>
+            <div class="ml-0.5 text-xs text-left">
               <FormattedDate date={pubDate} />
               {
                 updatedDate && (
-                  <div class="italic">
-                    Last updated on <FormattedDate date={updatedDate} />
-                  </div>
+                  <span>
+                    (upd. <FormattedDate date={updatedDate} />)
+                  </span>
                 )
               }
             </div>
-            <div class="mb-4 pb-0 text-3xl font-bold">{title}</div>
             <Tag tags={tags} />
             <hr class="h-px mt-0 bg-[var(--white)] border-0" />
           </div>

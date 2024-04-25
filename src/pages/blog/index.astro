@@ -96,7 +96,7 @@ const posts = (await getCollection("blog")).sort(
       {
         posts.map(post => (
           <div>
-            <a href={`/blog/${post.slug}/`} class="group">
+            <a href={`/blog/${post.slug}/`} class="group flex flex-col h-full">
               <img
                 class="rounded-xl"
                 width={720}
@@ -108,11 +108,18 @@ const posts = (await getCollection("blog")).sort(
               <h4 class="text-[var(--blue)] group-hover:text-[var(--accent)]">
                 {post.data.title}
               </h4>
-              <p class="text-sm text-[var(--blue)] group-hover:text-[var(--accent)]">
+              <p class="text-sm text-[var(--blue)] group-hover:text-[var(--accent)] flex-1 flex-grow">
                 {post.data.description}
               </p>
-              <p class="text-sm text-[var(--blue)] group-hover:text-[var(--accent)]">
+              <hr class="my-1 h-px border-none group-hover:bg-[var(--accent)] bg-[var(--blue)]" />
+              <p class="text-sm text-[var(--blue)] group-hover:text-[var(--accent)] h-8">
                 <FormattedDate date={post.data.pubDate} />
+                <br />
+                {post.data.updatedDate && (
+                  <span>
+                    (updated <FormattedDate date={post.data.updatedDate} />)
+                  </span>
+                )}
               </p>
             </a>
           </div>
