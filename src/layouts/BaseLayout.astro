@@ -1,0 +1,37 @@
+---
+import { SITE_DESCRIPTION, SITE_TITLE } from "../consts";
+import "../styles/base.css";
+import BaseHead from "../components/BaseHead.astro";
+import Footer from "../components/Footer.astro";
+import Header from "../components/Header.astro";
+
+interface Props {
+  title?: string;
+  description?: string;
+  class?: string;
+  image?: string;
+  lang?: string;
+}
+
+const {
+  title = SITE_TITLE,
+  description = SITE_DESCRIPTION,
+  image = "/opengraph-preview.jpg",
+  class: className = "",
+  lang = "en",
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <BaseHead title={title} description={description} image={image} />
+  </head>
+  <body>
+    <Header />
+    <main class={className}>
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

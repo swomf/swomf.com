@@ -1,10 +1,8 @@
 ---
 import { type CollectionEntry, getCollection } from "astro:content";
-import { POSTS_PER_PAGE, SITE_DESCRIPTION, SITE_TITLE } from "../../consts";
-import BaseHead from "../../components/BaseHead.astro";
-import Footer from "../../components/Footer.astro";
-import Header from "../../components/Header.astro";
+import { POSTS_PER_PAGE } from "../../consts";
 import FormattedDate from "../../components/FormattedDate.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
 
 type Props = {
   posts: CollectionEntry<"blog">[];
@@ -60,60 +58,50 @@ export async function getStaticPaths() {
 const { posts, precedingSlug, succeedingSlug } = Astro.props;
 ---
 
-<!doctype html>
-<html lang="en">
-  <head>
-    <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-  </head>
-  <body>
-    <Header />
-    <main>
-      {
-        posts.map(post => (
-          <>
-            <a
-              class="text-[var(--blue)] hover:text-[var(--accent)]"
-              href={`/blog/${post.slug}/`}
-            >
-              {post.data.title}
-            </a>
-            <p class="ml-10">{post.data.description}</p>
-            {post.data.updatedDate ? (
-              <p class="ml-10">
-                <FormattedDate date={post.data.pubDate} /> (upd.{" "}
-                <FormattedDate date={post.data.updatedDate} />)
-              </p>
-            ) : (
-              <p class="ml-10">
-                <FormattedDate date={post.data.pubDate} />
-              </p>
-            )}
-          </>
-        ))
-      }
-      <nav>
-        {
-          (precedingSlug && (
-            <a
-              class="text-[var(--blue)] hover:text-[var(--accent)]"
-              href={`/tags/${precedingSlug}`}
-            >
-              prev
-            </a>
-          )) || <>prev</>
-        }
-        {
-          (succeedingSlug && (
-            <a
-              class="text-[var(--blue)] hover:text-[var(--accent)]"
-              href={`/tags/${succeedingSlug}`}
-            >
-              next
-            </a>
-          )) || <>next</>
-        }
-      </nav>
-    </main>
-    <Footer />
-  </body>
-</html>
+<BaseLayout>
+  {
+    posts.map(post => (
+      <>
+        <a
+          class="text-[var(--blue)] hover:text-[var(--accent)]"
+          href={`/blog/${post.slug}/`}
+        >
+          {post.data.title}
+        </a>
+        <p class="ml-10">{post.data.description}</p>
+        {post.data.updatedDate ? (
+          <p class="ml-10">
+            <FormattedDate date={post.data.pubDate} /> (upd.{" "}
+            <FormattedDate date={post.data.updatedDate} />)
+          </p>
+        ) : (
+          <p class="ml-10">
+            <FormattedDate date={post.data.pubDate} />
+          </p>
+        )}
+      </>
+    ))
+  }
+  <nav>
+    {
+      (precedingSlug && (
+        <a
+          class="text-[var(--blue)] hover:text-[var(--accent)]"
+          href={`/tags/${precedingSlug}`}
+        >
+          prev
+        </a>
+      )) || <>prev</>
+    }
+    {
+      (succeedingSlug && (
+        <a
+          class="text-[var(--blue)] hover:text-[var(--accent)]"
+          href={`/tags/${succeedingSlug}`}
+        >
+          next
+        </a>
+      )) || <>next</>
+    }
+  </nav>
+</BaseLayout>

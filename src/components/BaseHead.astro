@@ -1,17 +1,21 @@
 ---
-// Import the global.css file here so that it is included on
-// all pages through the use of the <BaseHead /> component.
+// Avoid using this component directly. Use <BaseLayout> instead.
 import "../styles/base.css";
+import { SITE_DESCRIPTION, SITE_TITLE } from "../consts";
 
 interface Props {
-  title: string;
-  description: string;
+  title?: string;
+  description?: string;
   image?: string;
 }
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
-const { title, description, image = "/opengraph-preview.jpg" } = Astro.props;
+const {
+  title = SITE_TITLE,
+  description = SITE_DESCRIPTION,
+  image = "/opengraph-preview.jpg",
+} = Astro.props;
 ---
 
 <!-- Global Metadata -->

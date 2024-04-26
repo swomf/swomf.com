@@ -1,10 +1,8 @@
 ---
 import type { CollectionEntry } from "astro:content";
-import BaseHead from "../components/BaseHead.astro";
-import Header from "../components/Header.astro";
-import Footer from "../components/Footer.astro";
 import FormattedDate from "../components/FormattedDate.astro";
 import Tag from "../components/Tags.astro";
+import BaseLayout from "./BaseLayout.astro";
 
 type Props = CollectionEntry<"blog">["data"];
 
@@ -12,48 +10,38 @@ const { title, description, tags, pubDate, updatedDate, heroImage } =
   Astro.props;
 ---
 
-<html lang="en">
-  <head>
-    <BaseHead title={title} description={description} />
-  </head>
-
-  <body>
-    <Header />
-    <main>
-      <article>
-        <div class="rounded-3xl">
+<BaseLayout>
+  <article>
+    <div class="rounded-3xl">
+      {
+        heroImage && (
+          <img
+            class="rounded-3xl"
+            width={1020}
+            height={510}
+            src={heroImage}
+            alt=""
+          />
+        )
+      }
+    </div>
+    <div class="prose">
+      <div class="p-4 text-center leading-4">
+        <div class="mb-4 pb-0 text-3xl font-bold">{title}</div>
+        <div class="ml-0.5 text-xs text-left">
+          <FormattedDate date={pubDate} />
           {
-            heroImage && (
-              <img
-                class="rounded-3xl"
-                width={1020}
-                height={510}
-                src={heroImage}
-                alt=""
-              />
+            updatedDate && (
+              <span>
+                (upd. <FormattedDate date={updatedDate} />)
+              </span>
             )
           }
         </div>
-        <div class="prose">
-          <div class="p-4 text-center leading-4">
-            <div class="mb-4 pb-0 text-3xl font-bold">{title}</div>
-            <div class="ml-0.5 text-xs text-left">
-              <FormattedDate date={pubDate} />
-              {
-                updatedDate && (
-                  <span>
-                    (upd. <FormattedDate date={updatedDate} />)
-                  </span>
-                )
-              }
-            </div>
-            <Tag tags={tags} />
-            <hr class="h-px mt-0 bg-[var(--white)] border-0" />
-          </div>
-          <slot />
-        </div>
-      </article>
-    </main>
-    <Footer />
-  </body>
-</html>
+        <Tag tags={tags} />
+        <hr class="h-px mt-0 bg-[var(--white)] border-0" />
+      </div>
+      <slot />
+    </div>
+  </article>
+</BaseLayout>
