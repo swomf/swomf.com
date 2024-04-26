@@ -4,7 +4,7 @@ description: "Basic algebraic intuitions for basic exponent and logarithm proper
 tags:
   - math
 pubDate: "Apr 21 2024"
-heroImage: "/logarithm-and-exponent-properties.jpg"
+heroImage: "/blog-pictures/logarithm-and-exponent-properties.jpg"
 ---
 
 ## Exponent rules

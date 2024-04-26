@@ -7,7 +7,7 @@ tags:
   - termux
 pubDate: "Apr 24 2024"
 updatedDate: "Apr 25 2024"
-heroImage: "/accepting-files-on-a-termux-webserver.jpg"
+heroImage: "/blog-pictures/the-lord-of-file-transfer.jpg"
 ---
 
 File transfer is funny.
@@ -72,7 +72,7 @@ Now use a client machine to visit your device in a browser, e.g.
 192.168.1.2:8000 or epicandroidname:8000, ignoring warnings complaining we're
 on HTTP instead of HTTPS.
 
-![Example of "Directory listing for /"](/pictures/the-lord-of-file-transfer-01.jpg)
+![Example of "Directory listing for /"](/blog-pictures/the-lord-of-file-transfer-01.jpg)
 
 Finally, <kbd><kbd>CTRL</kbd>+<kbd>C</kbd></kbd> will interrupt the program.
 
