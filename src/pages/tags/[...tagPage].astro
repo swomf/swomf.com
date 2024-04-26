@@ -6,45 +6,47 @@ import Footer from "../../components/Footer.astro";
 import Header from "../../components/Header.astro";
 import FormattedDate from "../../components/FormattedDate.astro";
 
+type Props = {
+  posts: CollectionEntry<"blog">[];
+  precedingSlug: string;
+  succeedingSlug: string;
+};
+
 export async function getStaticPaths() {
   const posts = await getCollection("blog");
 
-  const uniqueTags: Set<string> = new Set(
-    posts.flatMap((post: CollectionEntry<"blog">) => post.data.tags)
-  );
+  const uniqueTags = new Set(posts.flatMap(post => post.data.tags));
 
-  const staticPages: any[] = [];
+  const staticPages: { params: { tagPage: string }; props: Props }[] = [];
 
-  uniqueTags.forEach((tag: string) => {
-    const postsByTag: CollectionEntry<"blog">[] = posts.filter((post: any) =>
-      post.data.tags.includes(tag)
-    );
+  uniqueTags.forEach(tag => {
+    const postsByTag = posts.filter(post => post.data.tags.includes(tag));
 
-    let slices = [];
+    let slicesOfPosts: CollectionEntry<"blog">[][] = [];
     for (let i = 0; i < postsByTag.length; i += POSTS_PER_PAGE) {
-      slices.push(postsByTag.slice(i, i + POSTS_PER_PAGE));
+      slicesOfPosts.push(postsByTag.slice(i, i + POSTS_PER_PAGE));
     }
 
-    for (let i = 0; i < slices.length; i++) {
-      let slug, precedingSlug, succeedingSlug;
-      const pageNumber = i + 1;
-      precedingSlug = `${tag}/${pageNumber - 1}`;
-      slug = `${tag}/${pageNumber}`;
-      succeedingSlug = `${tag}/${pageNumber + 1}`;
-      if (pageNumber === 1) {
+    for (let pageNum = 1; pageNum <= slicesOfPosts.length; pageNum++) {
+      let precedingSlug = `${tag}/${pageNum - 1}`,
+        slug = `${tag}/${pageNum}`,
+        succeedingSlug = `${tag}/${pageNum + 1}`;
+
+      // the "1st" page has no number in URL
+      if (pageNum === 1) {
         slug = `${tag}`;
-        precedingSlug = "";
-      }
-      if (pageNumber === 2) {
+        precedingSlug = ""; // no previous
+      } else if (pageNum === 2) {
         precedingSlug = `${tag}`;
       }
-      if (pageNumber === slices.length) {
-        succeedingSlug = "";
+      if (pageNum === slicesOfPosts.length) {
+        succeedingSlug = ""; // no next
       }
+
       staticPages.push({
         params: { tagPage: slug },
         props: {
-          posts: slices[i],
+          posts: slicesOfPosts[pageNum - 1],
           precedingSlug,
           succeedingSlug,
         },
@@ -67,7 +69,7 @@ const { posts, precedingSlug, succeedingSlug } = Astro.props;
     <Header />
     <main>
       {
-        posts.map((post: any) => (
+        posts.map(post => (
           <>
             <a
               class="text-[var(--blue)] hover:text-[var(--accent)]"

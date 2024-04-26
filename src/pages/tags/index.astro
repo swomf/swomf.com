@@ -9,12 +9,7 @@ import Tag from "../../components/Tags.astro";
 
 const posts = await getCollection("blog");
 
-const getUniqueTags = (posts: any[]) => {
-  const allTags = posts.flatMap((post: any) => post.data.tags);
-  return [...new Set(allTags)];
-};
-
-const tags = getUniqueTags(posts);
+const uniqueTags = Array.from(new Set(posts.flatMap(post => post.data.tags)));
 ---
 
 <!doctype html>
@@ -25,7 +20,7 @@ const tags = getUniqueTags(posts);
   <body>
     <Header />
     <main>
-      <Tag tags={tags} />
+      <Tag tags={uniqueTags} />
     </main>
     <Footer />
   </body>
