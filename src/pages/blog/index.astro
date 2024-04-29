@@ -26,11 +26,13 @@ const posts = (await getCollection("blog")).sort(
           </h4>
           <p class="text-sm text-[var(--blue)] group-hover:text-[var(--accent)] flex-1 flex-grow">
             {post.data.description}
+            <br />
+            <span class="text-xs text-[var(--blue)] group-hover:text-[var(--accent)] italic">
+              {post.data.tags.join(" ")}
+            </span>
           </p>
           <hr class="my-1 h-px border-none group-hover:bg-[var(--accent)] bg-[var(--blue)]" />
-          <p class="text-xs text-[var(--blue)] group-hover:text-[var(--accent)] h-12">
-            {post.data.tags.join(" ")}
-            <br />
+          <p class="text-xs text-[var(--blue)] group-hover:text-[var(--accent)] h-8">
             <FormattedDate date={post.data.pubDate} />
             <br />
             {post.data.updatedDate && (
