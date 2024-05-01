@@ -27,9 +27,9 @@ const posts = (await getCollection("blog")).sort(
           <p class="text-sm text-[var(--blue)] group-hover:text-[var(--accent)] flex-1 flex-grow">
             {post.data.description}
             <br />
-            <span class="text-xs text-[var(--blue)] group-hover:text-[var(--accent)] italic">
+            <div class="text-xs text-[var(--blue)] group-hover:text-[var(--accent)] italic table-cell">
               {post.data.tags.join(" ")}
-            </span>
+            </div>
           </p>
           <hr class="my-1 h-px border-none group-hover:bg-[var(--accent)] bg-[var(--blue)]" />
           <p class="text-xs text-[var(--blue)] group-hover:text-[var(--accent)] h-8">
