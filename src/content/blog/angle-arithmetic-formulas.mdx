@@ -84,7 +84,7 @@ what we're actually, trigonometrically doing.
   <img src="/blog-pictures/angle-arithmetic-formulas-08.svg" alt="step 8" class="mx-auto"/>
   <div>
     Let's do addition and subtraction!
-
+    {/* Keep these as single-dollar-sign oneliners for word wrap. */}
     $cos(\alpha+\beta)=cos\alpha cos\beta - sin\alpha sin\beta$
 
     $sin(\alpha+\beta)=sin\alpha cos\beta + cos\alpha sin\beta$
@@ -96,38 +96,18 @@ what we're actually, trigonometrically doing.
 
 ## Not tired yet? Let's use what we have to derive the others!
 
-The other formulas simply build off of these two.
-Just remember that sine waves are odd functions and
-cosine waves are even functions.
+With just the two formulas above, we can build everything else:
 
-<img
-  src="/blog-pictures/angle-arithmetic-formulas-09.svg"
-  alt="sine and cosine evenness"
-  class="mx-auto"
-/>
+- angle addition formula for $tan(\theta)$
+- angle subtraction formulas
+- double-angle formulas
+- half-angle formulas
 
-$$
-\begin{align}
-sin(-\theta) &= -sin(\theta) \notag \\
-cos(-\theta) &= cos(\theta) \notag
-\end{align}
-$$
+### angle addition formula (tangent)
 
-With this, the angle-subtraction formulas come in easy.
-
-$$
-\begin{align}
-cos(\alpha + -\beta) &= cos(\alpha) cos(\beta) - sin(\alpha) sin(-\beta) \notag \\
-cos(\alpha - \beta)  &= cos\alpha cos\beta - sin\alpha (-sin\beta) \notag \\
-cos(\alpha - \beta)  &= cos\alpha cos\beta + sin\alpha sin\beta \notag \\
-\notag \\
-sin(\alpha + -\beta) &= sin(\alpha) cos(-\beta) + cos(\alpha) sin(-\beta) \notag \\
-sin(\alpha - \beta)  &= sin\alpha cos\beta - cos\alpha sin\beta \notag \\
-\end{align}
-$$
-
-And since the tangent of an angle is just $sin\theta \div cos\theta$,
-tangent comes in easy too.
+Just apply
+$$tan(\theta) = \frac{sin(\theta)}{cos(\theta)}$$
+and factor.
 
 $$
 \begin{align}
@@ -155,16 +135,45 @@ tan(\alpha + \beta) &= \frac{
   tan\alpha - tan\beta
 }{
   1 + tan\alpha tan\beta
-} \notag
+}
 \end{align}
 $$
 
-Though we could do this same procedure with $sin(\alpha - \beta)$
-and $cos(\alpha - \beta)$, it's easier to recognize that tangents are even functions.
+## angle subtraction formulas
+
+Remember what odd and even functions are?
+
+- **Even**: reflects over the y-axis (cosine)
+- **Odd**: reflects over the origin, aka 180 degree rotation (sine, tangent)
+
+<img
+  src="/blog-pictures/angle-arithmetic-formulas-09.svg"
+  alt="sine and cosine evenness"
+  class="mx-auto"
+/>
+
+This leads to the following properties:
 
 $$
 \begin{align}
-tan(-\theta) &= -tan(\theta) \notag \\
+sin(-\theta) &= -sin(\theta) \notag \\
+cos(-\theta) &= cos(\theta) \notag \\
+tan(-\theta) &= -tan(\theta) \notag
+\end{align}
+$$
+
+With this, the angle-subtraction formulas become simple substitution.
+
+$$
+\begin{align}
+cos(\alpha + -\beta) &= cos(\alpha) cos(\beta) - sin(\alpha) sin(-\beta) \notag \\
+cos(\alpha - \beta)  &= cos\alpha cos\beta - sin\alpha (-sin\beta) \notag \\
+cos(\alpha - \beta)  &= cos\alpha cos\beta + sin\alpha sin\beta \\
+\notag \\
+sin(\alpha + -\beta) &= sin(\alpha) cos(-\beta) + cos(\alpha) sin(-\beta) \notag \\
+sin(\alpha - \beta)  &= sin\alpha cos\beta - cos\alpha sin\beta
+\\
+\notag \\
 tan(\alpha + -\beta) &= \frac{
   tan\alpha - tan(-\beta)
 }{
@@ -174,6 +183,99 @@ tan(\alpha - \beta) &= \frac{
   tan\alpha + tan\beta
 }{
   1 - tan\alpha tan\beta
-} \notag
+}
 \end{align}
 $$
+
+### double angle formulas
+
+These are basically the addition formulas.
+
+Note that $cos(2\alpha)$ has two alternate forms because of the
+Pythagorean Identity,  
+$sin^2 \theta + cos^2 \theta = 1$.
+
+$$
+\begin{align}
+sin(2\alpha) &= sin(\alpha + \alpha) \notag \\
+  &= sin(\alpha)cos(\alpha) + sin(\alpha)cos(\alpha) \notag \\
+sin2\alpha &= 2sin\alpha cos\alpha \\
+\notag \\
+cos(2\alpha) &= cos(\alpha + \alpha) \notag \\
+  &= cos(\alpha)cos(\alpha) - sin(\alpha)sin(\alpha) \notag \\
+cos2\alpha &= cos^2 \alpha - sin^2 \alpha \\
+\notag \\
+  & \quad \text{Alternate } cos2\alpha \text{ forms:} \notag \\
+cos2\alpha &= cos^2 \alpha - sin^2 \alpha \quad \quad \text{alt 1: sine-only} \notag \\
+  &= (1 - sin^2 x) - sin^2\alpha \notag \\
+cos2\alpha &= 1 - 2sin^2\alpha \\
+cos2\alpha &= cos^2 \alpha - sin^2 \alpha \quad \quad \text{alt 2: cosine-only} \notag \\
+  &= cos^2\alpha - (1 - cos^2\alpha) \notag \\
+cos2\alpha &= 2cos^2\alpha - 1 \\
+\notag \\
+tan(2\alpha) &= tan(\alpha + \alpha) \notag \\
+tan(2\alpha) &= \frac{
+  tan\alpha + tan\alpha
+}{
+  1 - tan\alpha tan\alpha
+} \notag \\
+tan2\alpha &= \frac{2tan\alpha}{1 - tan^2\alpha}
+\end{align}
+$$
+
+### half angle formulas
+
+Because the $cos$ double-angle formula can be expressed in both
+a $sin$-only form and a $cos$-only form, we can use $cos2\alpha$ to solve
+for the half-angle formulas.
+
+$$
+\begin{align}
+cos2\alpha &= 1 - 2sin^2(\alpha) \quad \text{ Sine-friendly version} \notag \\
+cos\alpha &= 1 - 2sin^2(\frac{\alpha}{2}) \quad \text{Solve for } sin(\frac{\alpha}{2}) \notag \\
+1 - cos\alpha &= 2sin^2(\frac{\alpha}{2}) \notag \\
+\frac{1 - cos\alpha}{2} &= sin^2(\frac{\alpha}{2}) \notag \\
+\pm \sqrt{\frac{1 - cos\alpha}{2}} &= sin(\frac{\alpha}{2}) \\
+\notag \\
+cos2\alpha &= 2cos^2\alpha - 1 \quad \text{ Cosine-friendly version} \notag \\
+cos\alpha &= 2cos^2(\frac{\alpha}{2}) - 1 \quad \text{Solve for } cos(\frac{\alpha}{2}) \notag \\
+cos\alpha + 1 &= 2cos^2(\frac{\alpha}{2}) \notag \\
+\frac{cos\alpha + 1}{2} &= cos^2(\frac{\alpha}{2}) \notag \\
+\pm \sqrt{\frac{1 + cos\alpha}{2}} &= cos(\frac{\alpha}{2}) \\
+\end{align}
+$$
+
+_Hey, what does the plus-minus mean?_
+
+If a half-angle formula has a $\pm$ in it, we need to consider
+the quadrant of where the new angle ends up. For example, $cos(100 \degree)$
+in quadrant II is negative, but $cos(100 \degree \div 2)$ in quadrant I is positive.
+
+For tangent, we once again apply $$tan\theta = \frac{sin\theta}{cos\theta}$$:
+
+$$
+\begin{align}
+tan(\frac{\alpha}{2}) &= \frac{
+    sin(\frac{\alpha}{2})
+  }{
+    cos(\frac{\alpha}{2})
+  } \notag \\
+  &= \frac{
+    \pm\sqrt{\frac{1 - cos\alpha}{2}}
+  }{
+    \pm\sqrt{\frac{1 + cos\alpha}{2}}
+  } \notag \\
+  &= \frac{
+    \pm\sqrt{1 - cos\alpha}
+  }{
+    \pm\sqrt{1 + cos\alpha}
+  } \text{ Rationalize the denominator!} \notag \\
+  &= \frac{\pm\sqrt{1 - cos\alpha}}{\pm\sqrt{1 + cos\alpha}} \bullet
+  \frac{\sqrt{1 - cos\alpha}}{\sqrt{1 - cos\alpha}} \notag \\
+  &= \frac{\pm\sqrt{(1 - cos\alpha)^2}}{\pm\sqrt{1^2 - cos^2\alpha}} \notag \\
+  &= \frac{\pm\sqrt{(1 - cos\alpha)^2}}{\pm\sqrt{sin^2\alpha}} \quad \text{ Pythag. Identity}\notag \\
+tan(\frac{\alpha}{2}) &= \frac{1 - cos\alpha}{sin\alpha}
+\end{align}
+$$
+
+The $^2$ sign within the $$\sqrt{}$$ makes the $$\sqrt{}$$ positive, removing the need for $\pm$.
