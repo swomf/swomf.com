@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 import FormattedDate from "../../components/FormattedDate.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import Img from "../../components/Img.astro";
 
 const posts = (await getCollection("blog")).sort(
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
@@ -13,13 +14,13 @@ const posts = (await getCollection("blog")).sort(
     posts.map(post => (
       <div>
         <a href={`/blog/${post.slug}/`} class="group flex flex-col h-full">
-          <img
+          <Img
             class="rounded-xl"
             width={720}
             height={360}
-            text-right
             src={post.data.heroImage}
             alt=""
+            loading="eager"
           />
           <h4 class="text-[var(--blue)] group-hover:text-[var(--accent)]">
             {post.data.title}
