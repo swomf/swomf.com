@@ -4,7 +4,7 @@ description: "Prove sin(α+β), cos(α+β) with a picture; then, derive the rest
 tags:
   - math
 pubDate: "Apr 21 2024"
-updatedDate: "May 01 2024"
+updatedDate: "May 03 2024"
 heroImage: "/src/assets/images/angle-arithmetic-formulas.jpg"
 ---
 
@@ -248,11 +248,19 @@ cos\alpha + 1 &= 2cos^2(\frac{\alpha}{2}) \notag \\
 \end{align}
 $$
 
-_Hey, what does the plus-minus mean?_
+<div class="p-1 border-2 border-[var(--white)] rounded-lg">
+  <i>Hey, what does the plus-minus mean?</i>
 
-If a half-angle formula has a $\pm$ in it, we need to consider
-the quadrant of where the new angle ends up. For example, $cos(100 \degree)$
-in quadrant II is negative, but $cos(100 \degree \div 2)$ in quadrant I is positive.
+If a half-angle formula has a $\pm$ in it, we need to
+_consider the quadrant_ of where the new angle ends up, to
+and then pick either $+$ or $-$. Think of it this way:
+
+- $$\cos(100 \degree)$$ is in quadrant II and thus negative
+- $$\cos(\frac{100 \degree}{2}) = \cos(50 \degree)$$ is in quadrant I
+  and thus positive. Although our formula says $\pm$, we need to
+  recognize that a cosine of a quadrant I angle is positive.
+
+</div>
 
 For tangent, we once again apply $$tan\theta = \frac{sin\theta}{cos\theta}$$:
 
@@ -281,4 +289,27 @@ tan(\frac{\alpha}{2}) &= \frac{1 - cos\alpha}{sin\alpha}
 \end{align}
 $$
 
-The $^2$ sign within the $$\sqrt{}$$ makes the $$\sqrt{}$$ positive, removing the need for $\pm$.
+Interestingly, we get to remove the $\pm$ because of a very interesting
+case-by-case basis that appears: instead of _us_ needing to select
+$+$ or $-$, the angle functions do it for us.
+
+Look up at formula 12 again. No matter what angle $\alpha$ we have, the
+numerator is greater than or equal to zero. <br />
+$(1 - cos\alpha) \geq 0$ <br />
+So, we only need to check if the signs of
+$sin\alpha$ and $tan\frac{\alpha}{2}$ match for any angle $\alpha$.
+
+_And they do_:
+
+1. If $$\frac{\alpha}{2}$$ lands in quadrant I, then $\alpha$ is in quadrant I or II.
+   - $tan$ is positive in quadrant I
+   - $sin$ is positive in quadrant I and II
+2. If $$\frac{\alpha}{2}$$ lands in quadrant II, then $\alpha$ is in quadrant III or IV.
+   - $tan$ is negative in quadrant II
+   - $sin$ is negative in quadrant III and IV
+3. If $$\frac{\alpha}{2}$$ lands in quadrant III, then $\alpha$ is in quadrant I or II (wraps around).
+   - $tan$ is positive in quadrant III
+   - $sin$ is positive in quadrant I and II
+4. If $$\frac{\alpha}{2}$$ lands in quadrant IV, then $\alpha$ is in quadrant III or IV (wraps around).
+   - $tan$ is negative in quadrant IV
+   - $sin$ is negative in quadrant III and IV
