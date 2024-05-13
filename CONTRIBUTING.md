@@ -15,12 +15,17 @@ except for this commit type:
 
 * **deps**
 * **blog** pertains to `src/pages/blog`, or *very
-    general* changes to `src/content` e.g. changing
-    every \<img\> tag
+    general* changes to `src/content`
+    * e.g. changing every \<img\> tag
 * **tags** pertains to `src/pages/tags`
 * **home** pertains to the homepage
 * **css**
 * **dx** pertains to development experience
+
+### footers
+
+* **wip** add `wip: true` at end of a post commit if not
+    intended to be a final copy
 
 ### deprecations
 
