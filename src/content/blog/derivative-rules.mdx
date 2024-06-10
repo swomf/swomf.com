@@ -1,0 +1,1033 @@
+---
+title: "Derivative rules"
+description: "Intuitive Calc I derivative rules"
+tags:
+  - math
+pubDate: "May 01 2024"
+heroImage: "/src/assets/images/derivative-rules.jpg"
+---
+
+import Img from "../../components/Img.astro";
+
+The "secant" of a function, i.e. the formula for slope between two given
+points on the function, is
+
+<div class="grid grid-cols-2 gap-4 items-center justify-center">
+  <div>
+    $$
+    \begin{aligned}
+    \frac{\triangle y}{\triangle x} &= \frac{y_2 - y_1}{x_2 - x_1} \\
+    \frac{\triangle y}{\triangle x} &= \frac{f(x + h) - f(x)}{h}
+    \end{aligned}
+    $$
+  </div>
+  <Img src="/src/assets/images/derivative-rules-01.svg" alt="secant" class="mx-auto" loading="lazy"/>
+</div>
+
+If we make the difference between the x-values of the points really, _really_ small, lowering $h$ (the distance between
+$x_2$ and $x_1$) towards an infinitesimal (almost $0$), we
+can find the function's _derivative_ -- this tells us the
+instant slope at any given point of the function.
+
+<div class="grid grid-cols-2 gap-4 items-center justify-center">
+  <div class="text-xs sm:text-sm">
+    $$
+    \frac{d}{dx}f(x) = \lim_{h \to 0} \frac{f(x+h) - f(x)}{h}
+    $$
+  </div>
+  <Img src="/src/assets/images/derivative-rules-02.svg" alt="the secant at an instant point is the 'tangent' line" class="mx-auto" loading="lazy"/>
+</div>
+
+This "difference formula" is the first half of calculus.
+
+## constant rule
+
+Let's skip the formula and go right to the picture.
+
+<div class="grid grid-cols-2 gap-4 items-center justify-center">
+  <div>
+    If $f(x)$ is equal to a constant $C$, such as 3, it's obvious that the
+    formula for instant slope at every point of $f(x)$ would just be $f'(x) =
+    0$.
+  </div>
+  <Img
+    src="/src/assets/images/derivative-rules-constant.svg"
+    alt="instant slope of a constant"
+    class="mx-auto"
+    loading="lazy"
+  />
+</div>
+
+Hence,
+
+$$
+\begin{align}
+\frac{d}{dx} C &= 0
+\end{align}
+$$
+
+## coefficient rule
+
+We love pictures here.
+
+<div class="grid grid-cols-2 gap-4 items-center justify-center">
+  <div>
+    For a linear function $y=mx+b$, it's obvious that the formula for instant
+    slope at every point would just be $m$. By definition, that's the slope!
+  </div>
+  <Img
+    src="/src/assets/images/derivative-rules-coefficient.svg"
+    alt="the instant slope of a linear function stays constant"
+    class="mx-auto"
+    loading="lazy"
+  />
+</div>
+
+Hence,
+
+$$
+\begin{align}
+\frac{d}{dx} mx &= m
+\end{align}
+$$
+
+## sum and difference rule
+
+When we take a derivative of two added functions, it's the same as adding their derivatives.
+
+$$
+\begin{align}
+\frac{d}{dx} (f(x) + g(x)) &= \frac{d}{dx} f(x) + \frac{d}{dx} g(x)
+\end{align}
+$$
+
+This is just splitting the difference formula's fraction, like $$\frac{a+b}{x} = \frac{a}{x} + \frac{b}{x}$$
+
+<div class="text-xs sm:text-sm">
+$$
+\begin{aligned}
+\frac{d}{dx} f(x) &= \lim_{h \to 0} \frac{f(x+h) - f(x)}{h} \\
+\frac{d}{dx} (f(x) + g(x)) &= \lim_{h \to 0} \frac{f(x+h) + g(x+h) - f(x) - g(x)}{h} \\
+\frac{d}{dx} (f(x) + g(x)) &= \lim_{h \to 0} \frac{f(x+h) - f(x)}{h} + \lim_{h \to 0} \frac{g(x+h) - g(x)}{h} \\
+\frac{d}{dx} (f(x) + g(x)) &= \frac{d}{dx} f(x) + \frac{d}{dx} g(x)
+\end{aligned}
+$$
+</div>
+
+And of course, all this jazz applies to subtraction too -- subtraction is just negative addition.
+
+$$
+\begin{aligned}
+\frac{d}{dx} (f(x) + - g(x)) &= \frac{d}{dx} f(x) + - \frac{d}{dx} g(x)
+\end{aligned}
+$$
+
+## product rule
+
+This is where things start to get less trivial.
+
+Before algebra, let's visualize what $$y=f(x)g(x)$$
+would look like (source: <a href="https://piped.video/watch?v=YG15m2VwSjA&t=253" target="_blank">3b1b</a>).
+
+<div class="grid grid-cols-2 gap-4 items-center justify-center">
+  <Img
+    src="/src/assets/images/derivative-rules-product-01.svg"
+    alt="a square with sides f(x) and g(x), whose area is y"
+    class="mx-auto"
+    loading="lazy"
+  />
+  <div>
+    Let's make a rectangle whose area is
+
+    $$ y=f(x)g(x) $$
+
+    Now... let's extend each side to find the next instant point.
+    <li>Imagine that the difference between $f(x)$ and $f(x+h)$ is $df$</li>
+    <li>Imagine that the difference between $g(x)$ and $g(x+h)$ is $dg$</li>
+
+  </div>
+  <Img
+    src="/src/assets/images/derivative-rules-product-02.svg"
+    alt="the square's sides grow to f(x+h) and g(x+h)"
+    class="mx-auto"
+    loading="lazy"
+  />
+  <div>
+    The tiny differential bits that we added, i.e. $df,$ $dg,$
+    and the $$\text{tiny}\times\text{tiny}$$ negligible-area nub on
+    the bottom right, now expand our area a Tiny Bit... by $dy.$
+    <span class="text-xs sm:text-sm">
+    $$
+    \begin{align}
+    dy &= f(x)dg + g(x)df + dfdg \notag \\
+    \frac{dy}{dx} &= f(x)\frac{dg}{dx} + g(x)\frac{df}{dx}
+    \end{align}
+    $$
+    </span>
+
+  </div>
+</div>
+
+<div class="text-xs sm:text-sm overflow-x-auto p-1 sm:overflow-hidden border-2 border-[var(--white)] rounded-lg">
+  Cool, right? Of course, we could've just done algebra from the start.
+$$
+\begin{align}
+\frac{d}{dx} f(x)     &= \lim_{h \to 0} \frac{f(x+h) - f(x)}{h} \notag \\
+\frac{d}{dx} f(x)g(x) &= \lim_{h \to 0} \frac{f(x+h)g(x+h) - f(x)g(x)}{h} \notag \\
+\frac{d}{dx} f(x)g(x) &= \lim_{h \to 0} \frac{f(x+h)g(x+h) - f(x+h)(g(x)) + f(x+h)(g(x)) - f(x)g(x)}{h} \notag \\
+\frac{d}{dx} f(x)g(x) &= \lim_{h \to 0} \frac{f(x+h)(g(x+h) - g(x)) + g(x)(f(x+h) - f(x))}{h} \notag \\
+\frac{d}{dx} f(x)g(x) &= f(x)g'(x) + g(x)f'(x) \notag \\
+\frac{d}{dx} f(x)g(x) &= f'g + fg' \\
+\end{align}
+$$
+</div>
+
+## power rule
+
+The power rule is just a special case of the product rule. Don't believe me?
+Let's knock your socks off...
+
+<Img
+  src="/src/assets/images/derivative-rules-power.svg"
+  alt="power rule as n-dimensional cubes of length x"
+  class="mx-auto"
+  loading="lazy"
+/>
+
+When we apply product rule logic to an $x^2$
+square, growing each side by $dx,$ the $(dx)^2$ corner becomes
+a negligible $$\text{tiny} \times \text{tiny}.$$
+
+When we generalize that to an $x^3$ cube, we get three
+$x^2 \times dx$ growths from the faces; the edge growths
+$x(dx)^2$ and the corner growth $(dx)^3$ become
+negligible due to $$\text{tiny} \times \text{tiny}.$$
+
+$$
+\begin{align}
+y                &= x^2 \notag \\
+y + dy           &= (x+dx)^2 \notag \\
+dy               &= x(dx) + (dx)x + (dx)^2 \quad \text{Foolish square.} \notag \\
+\frac{dy}{dx}    &= 2x \notag \\
+\notag \\
+y                &= x^3 \notag \\
+y + dy           &= (x+dx)^3 \notag \\
+dy               &= xx(dx) + x(dx)x + (dx)xx + 3x(dx)^2 + (dx)^3 \notag \\
+\frac{dy}{dx}    &= 3x^2 \quad \text{GET CUBED.} \notag
+\end{align}
+$$
+
+So our pattern is, for any multi-dimensional square or cube or hypercube:
+
+- Extrude every side by $dx$
+  - e.g. Cube: $xxx$ becomes $(x+dx)(x+dx)(x+dx)$
+- Multiply this $dx$ by every other side (lengths of $x$) to
+  find the added area/volume/hypervolume of that extrusion
+  - e.g. Faces: $(dx)xx + x(dx)x + xx(dx) = 3x^2dx$
+- The growths on the extrusions' _outskirts_,
+  like the corner growth in a square, or the edges and
+  corners of a cube, have multiple $dx$'s and are thus
+  negligible
+  - e.g. $(dx)(dx)x + (dx)x(dx) + x(dx)(dx) + (dx)(dx)(dx)$
+
+$$
+\begin{align}
+\frac{d}{dx} x^a &= ax^{a-1}
+\end{align}
+$$
+
+<div class="text-xs sm:text-sm overflow-x-auto p-1 sm:overflow-hidden border-2 border-[var(--white)] rounded-lg">
+  The algebra isn't as satisfying, because it requires the binomial
+  coefficient. Why? Let's look at what's going on when you power up, first.
+
+$$
+\begin{aligned}
+(x+h)^5 &= (x+h) * (x+h) * (x+h) * (x+h) * (x+h) \\
+(x+h)^5 &= xxxxx + xxxxh + xxxhx + xxhxx + xhxxx + hxxxx ... \\
+        & \quad + xxxhh + xxhxh + xxhhx + xhxhx + xhhxx ... \\
+        & \quad + hhhhx + hhhxh + hhxhh + hxhhh + xhhhh + hhhhh
+\end{aligned}
+$$
+
+So, for every amount of x's, e.g. 3/5 variables are x or 2/5 variables are h,
+we also have every possible unique position of this amount of x'es.
+
+If we want to pick out 3/5 objects from a Big Ordered Set, where the Small Set order
+doesn't matter, we use the binomial coefficient... which I'll cover in a later
+article ¯\\\_(⌐■_■)\_/¯
+
+$$
+\begin{align}
+f'(x)              &= \lim_{h \to 0} \frac{f(x+h) - f(x)}{h} \notag \\
+\frac{d}{dx} x^a   &= \lim_{h \to 0} \frac{(x+h)^a - x^a}{h} \notag \\
+\frac{d}{dx} x^a   &= \lim_{h \to 0} \frac{{a\choose 0}x^0 h^a + {a\choose 1}x^1 h^{a-1} + ... + {a\choose a}x^a h^0 - x^a}{h} \notag \\
+& \quad \text{Divide out the h.} \notag \\
+\frac{d}{dx} x^a   &= \lim_{h \to 0} {a\choose 0}x^0 h^{a-1} + ... + {a\choose a-1}x^{a-1} h^{0} + {a\choose a}x^a h^{-1} - \frac{x^a}{h} \notag \\
+& \quad \text{Numerators with h remaining are pretty much 0, negligible} \notag \\
+\frac{d}{dx} x^a   &= \lim_{h \to 0} {a\choose a-1}x^{a-1} h^{0} + {a\choose a}x^a h^{-1} - \frac{x^a}{h} \notag \\
+\frac{d}{dx} x^a   &= \lim_{h \to 0} a \bullet x^{a-1} h^{0} + 1 \bullet x^a h^{-1} - \frac{x^a}{h} \notag \\
+\frac{d}{dx} x^a   &= \lim_{h \to 0} a \bullet x^{a-1} + (x^a h^{-1} - x^a h^{-1}) \notag \\
+\frac{d}{dx} x^a   &= ax^{a-1} \\
+\end{align}
+$$
+
+</div>
+
+## quotient rule
+
+Just reverse that product rule diagram from earlier. In
+$$\frac{d}{dx}\frac{f(x)}{g(x)},$$ the area is $f(x),$ and
+the sides are $g(x)$ and the output $y.$
+
+<div class="grid grid-cols-2 gap-4 items-center justify-center">
+  <Img
+    src="/src/assets/images/derivative-rules-quotient-01.svg"
+    alt="a square with sides g(x) and f(x)/g(x), whose area is f(x). the square's area changes from f(x) to f(x+h)"
+    class="mx-auto"
+    loading="lazy"
+  />
+  <div>
+    Remember our definitions:
+    <ul>
+      <li> $$df = f(x+h) - f(x)$$ </li>
+      <li> $$dg = g(x+h) - g(x)$$ </li>
+      <li>
+        $$dy=$$ the "resultant nudge" we hope to find (with respect to the nudge
+        $$dx$$)
+      </li>
+    </ul>
+  </div>
+</div>
+
+$$
+\begin{align}
+g(x)dy + \frac{f(x)}{g(x)}dg + \text{tiny}^2 &= df \notag \\
+g(x)dy &= df - \frac{f(x)}{g(x)}dg \notag \\
+dy &= \frac{df - \frac{f(x)}{g(x)}dg}{g(x)} \notag \\
+dy &= \frac{(df)(g(x)) - (f(x))(dg)}{g(x)^2} \notag \\
+\frac{dy}{dx} &= \frac{\frac{df}{dx}g(x) - f(x)\frac{dg}{dx}}{g(x)^2} \notag \\
+\frac{d}{dx} \frac{f(x)}{g(x)} &= \frac{f'(x)g(x) - f(x)g'(x)}{g(x)^2} \notag \\
+\frac{d}{dx} \frac{f(x)}{g(x)} &= \frac{f'g - fg'}{g^2}
+\end{align}
+$$
+
+## chain rule
+
+Let's say we want to find $\frac{dy}{dx}$ of
+the function composition $f(g(x)).$ To do this,
+we'll have to remember that a derivative is just
+
+$$
+\frac{y-y_1}{x-x_1} = \frac{
+  \text{resultant nudge in output } dy
+}{
+  \text{nudge in input } dx
+}
+$$
+
+at very tiny intervals of $dx.$
+
+<div class="grid grid-cols-2 gap-4">
+  <Img src="/src/assets/images/derivative-rules-chain.svg" alt="the chain rule as two number lines. the output change in the first number line is the input change of the other" class="mx-auto" loading="lazy"/>
+  <div>
+    A nudge in $x$ will result in a nudge in
+    $y_1=g(x)$.
+    We'll call this resultant nudge $dy_1.$
+
+    $$
+    \frac{dy_1}{dx_1}=\frac{\triangle y_1}{\triangle x_1}
+    $$
+
+    Since $g(x)$ is the "input" of $f$, a nudge in
+    $y_1$ will result in a nudge in $y_2=f(g(x))$.
+    We'll call this resultant nudge $dy_2$.
+
+    $$
+    \frac{dy_2}{dy_1}=\frac{\triangle y_2}{\triangle y_1}
+    $$
+
+    Because of these definitions, it is 100% sound to
+    do the following to relate $y_2$ to $x_1$:
+
+    $$
+    \frac{\triangle y_2}{\triangle y1} \times \frac{\triangle y_1}{\triangle x_1} = \frac{\triangle y_2}{\triangle x_1}
+    $$
+
+  </div>
+</div>
+
+That above equality is often represented as
+$$\frac{dy}{du} \times \frac{du}{dx} = \frac{dy}{dx},$$
+which means the same thing.
+
+$$
+\begin{align}
+\frac{d}{dx} f(g(x)) &= f'(g(x)) \times  g'(x)
+\end{align}
+$$
+
+<details>
+  <summary>A note on implicit differentiation</summary>
+
+Implicit differentiation, an application of the
+chain rule, is when we differentiate
+some variable (like $y$ or $z$) with respect to
+another (like $x$). Here's an example:
+
+$$
+\begin{aligned}
+\frac{d}{dx} (x^2 + y^2) &= \frac{d}{dx} 1 \\
+2x + 2y \frac{dy}{dx}    &= 0
+\end{aligned}
+$$
+
+Why does this happen? Well, if we differentiate
+$y$ with respect to $x,$ we _imply\*_ that $y$ is
+a "function" of $x,$ in the sense that there must be
+a "way" to map $x$ to $y$ on a graph
+(like $y=\pm\sqrt{x}$ or $y=\ln x$).
+
+<sup>(\* not actually why it's called this ;_; but it _should_ be)</sup>
+
+Consider $y = f(x).$
+
+The equation earlier would now look like
+
+$$
+\begin{aligned}
+\frac{d}{dx} (x^2 + f(x)^2) &= \frac{d}{dx} 1 \\
+2x + 2f(x) \frac{df}{dx}    &= 0
+\end{aligned}
+$$
+
+Think about it with our previous chain rule logic.
+Since $y$ is a "function" of $x,$ when we
+shift the input $x,$ by $dx,$ we will cause a
+resultant shift by the output $y,$ by $dy.$ Furthermore, this shift in the new input $y,$ by $dy,$
+will cause a shift in the next output $y^2.$ It's
+the same exact idea as differentiating $g(f(x)).$
+
+$$
+\begin{aligned}
+\frac{d}{dx} (x^2 + g(f(x)))     &= \frac{d}{dx} 1 \\
+2x + \frac{dg}{df} \frac{df}{dx} &= 0
+\end{aligned}
+$$
+
+Technically, implicit differentiation is applied on
+_every_ variable-that-is-a-function in an equation.
+
+$$
+\begin{aligned}
+\frac{d}{dx} y         &= \frac{d}{dx} 3x \\
+1 \times \frac{dy}{dx} &= 3 \times \frac{dx}{dx}
+\end{aligned}
+$$
+
+</details>
+
+## inverse functions
+
+This is just an application of the chain rule on the definition
+of an inverse function.
+
+Let's say that $f(x) = y$. For any input $x$, we can get an output $f(x)=y$. <br />
+Let's then say that function $g$ was the inverse of function $f$. For any output
+$y$, we can find the input $g(y)=x$.
+
+Formally, $f(g(x)) = x$.
+
+Just differentiate that!
+
+$$
+\begin{align}
+f(g(x)) &= x \notag \\
+\frac{d}{dx} f(g(x)) &= x \notag \\
+f'(g(x))g'(x) &= 1 \notag \\
+g'(x) &= \frac{1}{f'(g(x))}
+\end{align}
+$$
+
+## trig derivatives
+
+There's a very useful pattern in the sine and cosine
+derivatives.
+
+$$
+\begin{aligned}
+f(x)      &=  \sin x  \\
+f'(x)     &=  \cos x  \\
+f''(x)    &= -\sin x \\
+f'''(x)   &= -\cos x \\
+f''''(x)  &= \sin x
+\end{aligned}
+$$
+
+This is because differentiating sine and cosine
+causes a "phase shift," a shift in the entire form of the
+graph, towards the left. Let's look at this below:
+
+<div class="grid grid-cols-2 gap-4">
+  <Img src="/src/assets/images/derivative-rules-trig-01.svg" alt="sin, cos, -sin, and -cos. the peaks, troughs, and the steep midpoints of each function lead to the values of the function below them" class="mx-auto" loading="lazy"/>
+  <div>
+    Observe $f(x)=\sin x.$
+
+    Instant slope at the highest and lowest points of $$\sin x$$ is 0.
+
+    Instant slope at the spot halfway between any of these "zero-slope" points is when rate of change gets the fastest, where
+    $\frac{dy}{dx}$ reaches the peak of $\pm 1$.
+
+    Between said points, we can also discern how the rate of change itself
+    is changing. For example, in $\sin x,$ when we go from
+    $$\frac{dy}{dx}=0$$ to $\frac{dy}{dx}=-1$, the rate of lowering gets faster and faster.
+
+    With these ideas, we can sketch out a graph for $$\frac{d}{dx}\sin x.$$
+    And every time we differentiate, we just shift left...
+
+  </div>
+</div>
+
+Now that we know this, we can differentiate every other angle formula
+in terms of $\sin x$ and $\cos x.$ For example, using the quotient rule,
+we can find $\tan x$ as such:
+
+$$
+\begin{align}
+\frac{d}{d x} \tan x &= \frac{d}{d x} \frac{\sin x}{\cos x} \notag \\
+    &= \frac{\sin' x \cos x - \sin x \cos' x}{\cos x\cos x} \notag \\
+    &= \frac{\cos x \cos x - \sin x (-\sin x)}{\cos x\cos x} \notag \\
+    &= \frac{(\cos x)^2 + (\sin x)^2}{(\cos x)^2} \quad \text{Pyth. Identity} \notag \\
+    &= \frac{1}{(\cos x)^2} \notag \\
+\frac{d}{d x} \tan x &= (\sec x)^2
+\end{align}
+$$
+
+If you're in a rush and forgot the other angle formulas, you can do the
+same quotient rule, too! The quotient rule is the straightest
+path to solving every single one.
+
+$$
+\begin{align}
+\frac{d}{d x} \sec x &= \frac{d}{d x} \frac{1}{\cos x} \notag \\
+    &= \frac{1'\cos x - 1 \cos' x}{\cos x \cos x} \notag \\
+    &= \frac{0 \cos x - 1 (-\sin x)}{\cos x \cos x} \notag \\
+    &= \frac{\sin x}{\cos x \cos x} \notag \\
+\frac{d}{d x} \sec x &= \sec x \tan x \\
+\end{align}
+$$
+
+To prank yourself, try saying $secxtanx$ out loud, as if it were
+a word. It might help you remember it...
+
+$$
+\begin{align}
+\frac{d}{d x} \csc x &= \frac{d}{d x} \frac{1}{\sin x} \notag \\
+    &= \frac{1'\sin x - 1 \sin' x}{\sin x \sin x} \notag \\
+    &= \frac{0\sin x - 1 (\cos x)}{\sin x \sin x} \notag \\
+    &= \frac{-\cos x}{\sin x \sin x} \notag \\
+\frac{d}{d x} \csc x &= -\csc x \cot x \\
+\notag \\
+\frac{d}{d x} \cot x &= \frac{d}{d x} \frac{\cos x}{\sin x} \notag \\
+    &= \frac{\cos' x \sin x - \cos x \sin' x}{\sin x \sin x} \notag \\
+    &= \frac{(-\sin x) \sin x - \cos x \cos x}{\sin x \sin x} \notag \\
+    &= \frac{- ((\sin x)^2 + (\cos x)^2)}{(\sin x) ^2} \quad \text{Pyth. Identity} \notag \\
+    &= \frac{- 1}{(\sin x) ^2} \notag \\
+\frac{d}{d x} \cot x &= - (\csc x)^2
+\end{align}
+$$
+
+A lot of you might be unsatisfied with the proof of the sine, cosine,
+negative sine, negative cosine chain.
+
+> Just because it looks like it's true, doesn't mean it's 100% true.
+
+That's right. It's a convenient (but artistic) leap to differentiate
+the peaks, troughs, and quickest velocities of $\sin x,$ and to furthermore
+eyeball every other point on $\sin x$ to guess that $$\frac{dy}{dx}=\cos x.$$
+
+For those who reject this handwavy intuition, let's look at a slightly
+more huge diagram.
+
+<details>
+  <summary> $$\sin x$$: a difference formula diagram </summary>
+  <div class="grid grid-cols-3 gap-4">
+    <Img src="/src/assets/images/derivative-rules-trig-02.svg" alt="within a unit circle, a triangle of angle theta and a triangle of angle slightly-bigger-than-theta." class="mx-auto col-span-2" loading="lazy"/>
+    <div class="text-xs sm:text-sm">
+      This unit circle diagram<sup>(<a href="https://www.animations.physics.unsw.edu.au/jw/calculus.htm#Trigonometric" target="_blank">UNSW, 2009</a>)</sup>
+      shows what actually happens when we turn
+      $$\cos\theta$$ to $$\cos(\theta+d\theta)$$ and
+      $$\sin\theta$$ to $$\sin(\theta+d\theta).$$
+
+      When we move from $$\triangle\theta$$ to
+      $$\triangle(\theta+d\theta),$$ a new, tiny triangle
+      appears at the top right.
+
+      The purple sides are the tiny resultant shifts in the angle functions' outputs, and the purple
+      hypotenuse tends closer to the arc $$d\theta$$
+      making its length basically $$d\theta.$$ (Radians
+      let us do this.)
+
+      The angles of equilateral $$\triangle d\theta$$ are nearly $$(0,90,90),$$ so we can make a small trip
+      of $$\theta, 90-\theta, \theta$$ to find all of the
+      purple triangle's angles...
+    </div>
+    <Img src="/src/assets/images/derivative-rules-trig-03.svg" alt="demonstration of the similar triangles in the previous diagram. the similarity occurs as d-theta approaches zero" class="mx-auto col-span-2" loading="lazy"/>
+    <div class="text-xs sm:text-sm">
+      Wowzers: the purple triangle shares all the angles of the old $$\triangle\theta.$$ They're similar! So:
+
+      $$
+      \begin{aligned}
+      \frac{\cos\theta}{1} &= \frac{d(\sin \theta)}{d\theta} \\
+      \frac{\sin(\theta)}{1} &= -\frac{d(\cos\theta)}{d\theta} \\
+      \end{aligned}
+      $$
+
+      Of course, because $$cos\theta$$ is decreasing in this area of the unit circle,
+      $$d(cos\theta)$$ and thus
+      $$\frac{d}{d\theta}cos\theta$$ are technically
+      negative.
+    </div>
+
+  </div>
+  <div class="text-xs sm:text-sm overflow-x-auto p-1 sm:overflow-hidden border-2 border-[var(--white)] rounded-lg">
+    For the even deeper nonbelievers, here's the
+    <a href="https://www.mathsisfun.com/calculus/derivatives-trig-proof.html" target="_blank">algebra</a>. However, it takes two lemmas (baby proofs)
+    and the angle addition formula, so I'm ignoring it.
+  </div>
+</details>
+
+## euler and the logarithm
+
+You remember when you learned about $\pi$?
+
+> When you divide circumference by diameter, you get $\pi$.
+
+It's not _exactly_ "a special number that has that property"; it's
+more like, mathematicians imagined "I want this property to give
+me a special number," and then they found it afterwards.
+
+To make this sound less like nonsense, let's come back to Euler
+and do some inspection by calculator.
+
+- $$\frac{d}{dx} 2^x = 2^x \times 0.69314...$$
+- $$\frac{d}{dx} 3^x = 3^x \times 1.09861...$$
+- $$\frac{d}{dx} 2.5^x = 2.5^x \times 0.91629...$$
+- $$\frac{d}{dx} 2.7^x = 2.7^x \times 0.99325...$$
+
+By inspection, the weird multiplier tends to 1 as the exponent
+base tends to 2.7182818... mathematicians call this transcendental
+point $e.$
+
+- $$\frac{d}{dx} e^x = e^x \times 1$$
+
+This is one of the many definitions of $e.$ So, in a maybe ugly
+way, the derivative of $e^x$ is itself "by definition".
+
+<div class="text-xs sm:text-sm overflow-x-auto p-1 sm:overflow-hidden border-2 border-[var(--white)] rounded-lg">
+  Let's do some algebra on $e$'s _other_ definitions.
+
+  <ol>
+    <li>
+      $e$ as continuous compound interest.
+      $$
+      \begin{align}
+      e &= \lim_{n\to\infty} (1 + \frac{1}{n})^n \notag \\
+      e &= \lim_{h\to 0} (1 + h)^\frac{1}{h} \quad \quad \text{Same thing.}\notag \\
+      \frac{d}{dx} e^x &= \lim_{h\to 0}\frac{e^{x + h} - e^x}{h} \quad \text{ Difference formula} \notag \\
+        &= \lim_{h\to 0}\frac{e^x (e^h - 1)}{h} \quad \text{Factor out }e^x \notag \\
+        &= e^x\lim_{h\to 0}\frac{e^h - 1}{h} \notag \\
+        &= e^x\lim_{h\to 0}\frac{((1 + h)^\frac{1}{h})^h - 1}{h} \quad \text{Substitute definition}\notag \\
+        &= e^x\lim_{h\to 0}\frac{1 + h - 1}{h} \notag \\
+      \frac{d}{dx} e^x &= e^x \times 1
+      \end{align}
+      $$
+    </li>
+    <li>
+      $e^x$ as a Taylor series whose derivative is itself.
+
+      For reference, a Taylor series is just an infinitely long
+      polynomial, based on the form
+      $$a_0x^0 + a_1x^1 + a_2x^2 + a_3x^3...$$
+
+      $$
+      \begin{aligned}
+      e^x &= a_0 + a_1x^1 + a_2x^2 + a_3x^3 ... \\
+      e^0 &= 1 \\
+      e^x &= 1 + a_1x^1 + a_2x^2 + a_3x^3 ... \\
+      \frac{d}{dx} e^x &= a_1 + 2a_2x + 3a_3x^2 ... \\
+      1 + a_1x^1 + a_2x^2 ... &= a_1 + 2a_2x^1 + 3a_3x^2 ... \\
+      \end{aligned}
+      $$
+
+      Because $$a_0=1,\quad a_1=a_0,\quad a_2=\frac{1}{2}a_1,\quad a_3=\frac{1}{3}a_2...$$
+
+      we see that $$a_0=1, \quad a_1=1, \quad a_2= \frac{1}{2} \times 1,\quad a_3 = \frac{1}{3}(\frac{1}{2} \times 1)...$$
+
+      $$
+      \begin{align}
+      e^x &= 1 + 1x + \frac{1}{2}x^2 + \frac{1}{2 \times 3}x^3 + \frac{1}{2 \times 3 \times 4}x^4 ... \notag \\
+      e^x &= 1 + x + \frac{1}{2!}x^2 + \frac{1}{3!}x^3 + \frac{1}{4!}x^4... \notag \\
+      \frac{d}{dx}e^x &= 0 + 1 + 2\frac{1}{2!}x + 3\frac{1}{3!}x^2 + 4\frac{1}{4!}x^3 ... \\
+      \frac{d}{dx}e^x &= 1 + 1x + \frac{1}{2!}x^2 + \frac{1}{3!}x^3 + \frac{1}{4!}x^4 \notag ...
+      \end{align}
+      $$
+
+      so the equality holds.
+    </li>
+
+  </ol>
+</div>
+
+That's a lot. Thankfully, once we say that we know $e,$
+acquiring the derivative of $\ln x$ (the inverse of $e^x=y,$ aka $\log_e(y)=\ln(y)=x$), is a simple chain rule:
+
+$$
+\begin{align}
+x &= x \notag \\
+e^{\ln(x)} &= x \notag \\
+\frac{d}{dx} e^{\ln(x)} &= \frac{d}{dx} x \notag \\
+e^{\ln(x)} \times \frac{d}{dx} \ln(x) &= 1 \notag \\
+x \times \frac{d}{dx} \ln(x) &= 1 \notag \\
+\frac{d}{dx} \ln(x) &= \frac{1}{x}
+\end{align}
+$$
+
+and finally, the derivative of any power $a^x$ is a simple
+rearrangement into terms of $e$:
+
+$$
+\begin{align}
+\text{Let } a &= \text{some constant} \notag \\
+\frac{d}{dx} a^x &= \frac{d}{dx} (e^{\ln(a)})^x \notag \\
+  &= \frac{d}{dx} e^{x \ln a} \notag \\
+  &= e^{x \ln a} \times \ln a \notag \\
+  &= (e^{\ln a})^x \ln a \notag \\
+\frac {d}{dx} a^x &= a^x \ln a
+\end{align}
+$$
+
+## inverse trig derivatives
+
+<div class="grid grid-cols-2 gap-4 text-xs sm:text-sm">
+  <Img src="/src/assets/images/derivative-rules-inverse-trig-01.svg" alt="default triangle" class="mx-auto" loading="lazy"/>
+  <div>
+
+    An inverse trig function reverses some
+
+    $$
+    \sin\theta=\frac{\text{opposite}}{\text{hypotenuse}}
+    $$
+
+    into
+
+    $$
+    \arcsin\left(\frac{\text{opposite}}{\text{hypotenuse}}\right) = \theta
+    $$
+
+    Of course, this means that in an $$\arcsin x$$ triangle, aka
+    an $$\arcsin(\frac{x}{1})$$ triangle, the opposite has length $x$ and the hypotenuse has length 1.
+
+    <u>NOTE</u>: The inverse trig functions are very _man-made_, in order to pass the vertical line
+    test!
+
+    <details>
+      <summary> Vertical what now? </summary>
+    > If function $f(x)$ can be crossed at two points
+    > by a vertical line, then $f(x)$ has two output $y$'s for
+    > one single input $x.$ This makes $f(x)$ not a function.
+    </details>
+
+    To prevent relations such as
+
+    $$
+    \begin{aligned}
+    \sin(0) &= 0 \\
+    \sin(2\pi) &= 0
+    \end{aligned}
+    $$
+
+    from turning into the multiple-output
+
+    $$
+    \arcsin(0)=\{...0, 2\pi, ...\}
+    $$
+
+    we need to restrict both $\sin x$ and $\arcsin x$ into
+    "one-to-one" functions.
+
+    <ul>
+      <li>
+        Restrict $\sin x$'s domain and therefore
+        $\arcsin x$'s range to
+
+        $$
+        \left(-\frac{\pi}{2}, \frac{\pi}{2}\right)
+        $$
+
+      </li>
+      <li>
+        This will restrict $\sin x$'s range and therefore
+        $\arcsin x$'s range to $(-1, 1)$
+      </li>
+    </ul>
+
+    Ready? Let's go!
+
+  </div>
+  <Img src="/src/assets/images/derivative-rules-inverse-trig-02.svg" alt="arcsin triangle" class="mx-auto" loading="lazy"/>
+  <div>
+    Let's look at $$\arcsin \frac{x}{1},$$ where
+    $$
+    \frac{\text{opposite}}{\text{hypotenuse}}=\frac{x}{1}
+    $$
+
+    Remember our thought process for inverse functions:
+
+    $$
+    \begin{aligned}
+    \frac{d}{dx} \sin(\arcsin x) &= \frac{d}{dx} x \\
+    \cos(\arcsin x) \arcsin' x &= 1 \\
+    \end{aligned} \\
+    \arcsin' x = \frac{1}{\cos(\arcsin x)}
+    $$
+
+    Suddenly, we have a $\cos$ in there! Of course, using
+    $a^2 + b^2 = c^2,$ we can deduce the adjacent
+    side to be $$\sqrt{1-x^2}.$$
+
+    Hence,
+
+    $$
+    \begin{align}
+    \arcsin'x &= \frac{1}{\cos(\arcsin x)} \notag \\
+      &= \frac{1}{\cos\theta} \notag \\
+    \arcsin'x &= \frac{1}{\sqrt{1 - x^2}}
+    \end{align}
+    $$
+
+    Looking at the graph of $\arcsin x,$ this
+    always-positive derivative checks out!
+
+  </div>
+  <Img src="/src/assets/images/derivative-rules-inverse-trig-03.svg" alt="arccos triangle" class="mx-auto" loading="lazy"/>
+  <div>
+    The general process is the same for the other functions.
+    Build a triangle, Pythagorize, differentiate, check.
+
+    Let's move to $$\arccos(\frac{x}{1}),$$ where
+
+    $$
+    \frac{\text{adjacent}}{\text{hypotenuse}}=\frac{x}{1}
+    $$
+
+    First, we rawly differentiate the inverse function:
+
+    $$
+    \begin{aligned}
+    \frac{d}{dx} \cos(\arccos x) &= \frac{d}{dx} x \\
+    -\sin(\arccos x) \arccos ' x &= 1 \\
+    \end{aligned} \\
+    \arccos' x = \frac{1}{-sin(\arccos x)}
+    $$
+
+    then we find our missing side $$\sqrt{1-x^2}$$ using Pythagoras. After that, substitute:
+
+    $$
+    \begin{align}
+    \arccos' x &= \frac{1}{-\sin(\arccos x)} \notag \\
+      &= \frac{1}{-\sin\theta} \notag \\
+    \arccos' x &= \frac{1}{-\sqrt{1 - x^2}}
+    \end{align}
+    $$
+
+    Just like the picture, this derivative is always
+    negative.
+
+  </div>
+  <Img src="/src/assets/images/derivative-rules-inverse-trig-04.svg" alt="arctan triangle" class="mx-auto" loading="lazy"/>
+  <div>
+    For $\arctan(\frac{x}{1}),$ we have
+
+    $$
+    \frac{\text{opposite}}{\text{adjacent}}=\frac{x}{1}
+    $$
+
+    Recall that $tan'\theta=(\sec\theta)^2.$
+
+    Rawly differentiate:
+
+    $$
+    \begin{aligned}
+    \frac{d}{dx} \tan (\arctan x) &= \frac{d}{dx} x \\
+    sec^2 (\arctan x) \arctan'x &= 1 \\
+    \end{aligned} \\
+    \arctan' x = \frac{1}{\sec^2 (\arctan x)}
+    $$
+
+    then Pythagorize for the missing hypotenuse length,
+    $$\sqrt{1 + x^2}.$$
+
+    After that, substitute:
+
+    $$
+    \begin{align}
+    \arctan' x &= \frac{1}{\sec^2(\arctan x)} \notag \\
+      &= \frac{1}{\sec^2\theta} \notag \\
+      &= (\cos\theta)^2 \notag \\
+      &= \left(\frac{1}{\sqrt{1 + x^2}}\right)^2 \notag \\
+    \arctan' x &= \frac{1}{1 + x^2}
+    \end{align}
+    $$
+
+    And finally, check the graph. Our
+    always-positive derivative checks out!
+
+  </div>
+  <Img src="/src/assets/images/derivative-rules-inverse-trig-05.svg" alt="arcsec triangle" class="mx-auto" loading="lazy"/>
+  <div>
+    For $$\text{arcsec }(\frac{x}{1}),$$ we have
+
+    $$
+    \frac{\text{hypotenuse}}{\text{adjacent}} = \frac{x}{1}
+    $$
+
+    Recall that
+    $$\sec'\theta = \sec\theta\tan\theta.$$
+
+
+    <div class="text-xs sm:text-sm overflow-x-auto p-1 sm:overflow-hidden border-2 border-[var(--white)] rounded-lg">
+
+    <span class="mt-3">Rawly differentiate: </span>
+
+    $$
+    \begin{aligned}
+    \frac{d}{dx} \sec(\text{arcsec } x) &= \frac{d}{dx} x \\
+    \sec(\text{arcsec } x)\tan(\text{arcsec } x) \text{arcsec }' x &= 1 \\
+    \end{aligned} \\
+    \text{arcsec } ' x = \frac{1}{\sec(\text{arcsec } x)\tan(\text{arcsec } x)}
+    $$
+
+    </div>
+
+    then Pythagorize for the missing opposite length, which is
+    $$\sqrt{x^2 - 1}.$$
+
+
+    <div class="text-xs sm:text-sm overflow-x-auto p-1 sm:overflow-hidden border-2 border-[var(--white)] rounded-lg">
+
+    <span class="mt-3"> Finally, substitute: </span>
+
+    $$
+    \begin{align}
+    \text{arcsec }'x &= \frac{1}{\sec(\text{arcsec } x)\tan(\text{arcsec} x)} \notag \\
+      &= \frac{1}{\sec\theta \tan\theta} \notag \\
+      &= \frac{1}{x \sqrt{x^2 - 1}} \notag \\
+      &= |\frac{1}{x \sqrt{x^2 - 1}}| \notag \\
+    \text{arcsec }'x &= \frac{1}{|x|\sqrt{x^2 - 1}}
+    \end{align}
+    $$
+
+    Note that the lines on $\text{arcsec }x$ that
+    mathematicians prefer to use have an eternally
+    positive derivative. To stay positive,
+    we slap an absolute value around $|x|.$
+
+    </div>
+
+  </div>
+  <Img src="/src/assets/images/derivative-rules-inverse-trig-06.svg" alt="arccsc triangle" class="mx-auto" loading="lazy"/>
+  <div>
+    For $$\text{arccsc}(\frac{x}{1}),$$ we have
+    
+    $$
+    \frac{\text{hypotenuse}}{\text{opposite}}=\frac{x}{1}
+    $$
+    
+    
+    $x$ and
+    our opposite is 1. Recall that $$\csc'\theta = -\csc\cot \theta.$$
+
+    <div class="text-xs sm:text-sm overflow-x-auto p-1 sm:overflow-hidden border-2 border-[var(--white)] rounded-lg">
+
+    <span class="mt-3">Rawly differentiate: </span>
+
+    $$
+    \begin{aligned}
+    \frac{d}{dx} \csc(\text{arccsc } x) &= \frac{d}{dx} x \\
+    -\csc(\text{arccsc } x)\cot(\text{arccsc }x)\text{arccsc }'x &= 1 \\
+    \end{aligned} \\
+    \text{arccsc } ' x = \frac{1}{-\csc(\text{arccsc } x)\cot(\text{arccsc } x)}
+    $$
+
+    </div>
+
+    then Pythagorize for the missing adjacent length, which is
+    $$\sqrt{x^2 - 1}.$$
+
+    <div class="text-xs sm:text-sm overflow-x-auto p-1 sm:overflow-hidden border-2 border-[var(--white)] rounded-lg">
+
+    <span class="mt-3">Finally, substitute: </span>
+
+      $$
+      \begin{align}
+      \text{arccsc } ' x &= \frac{1}{-\csc(\text{arccsc } x)\cot(\text{arccsc } x)} \notag \\
+        &= \frac{1}{-\csc\theta \cot\theta} \notag \\
+        &= \frac{1}{- x \sqrt{x^2 - 1}} \notag \\
+      \text{arccsc }'x &= \frac{1}{-|x|\sqrt{x^2 - 1}}
+      \end{align}
+      $$
+
+      Since the part of $$\text{arccsc } x$$ we use
+      in-practice has a negative slope at every point, we
+      slap an absolute value in $-|x|.$
+
+    </div>
+
+  </div>
+  <Img src="/src/assets/images/derivative-rules-inverse-trig-07.svg" alt="arccot triangle" class="mx-auto" loading="lazy"/>
+  <div>
+    For $$\text{arccot }(\frac{x}{1}),$$ we have
+    
+    $$
+    \frac{\text{adjacent}}{\text{opposite}} = \frac{x}{1}
+    $$
+
+    Recall that $$\cot'\theta = -(\csc\theta)^2.$$
+
+    <div class="text-xs sm:text-sm overflow-x-auto p-1 sm:overflow-hidden border-2 border-[var(--white)] rounded-lg">
+
+    <span class="mt-3">Rawly differentiate: </span>
+
+    $$
+    \begin{aligned}
+    \frac{d}{dx} \cot(\text{arccot } x) &= \frac{d}{dx} x \\
+    -\csc(\text{arccot } x)^2 \text{arccot }'x &= 1 \\
+    \end{aligned} \\
+    \text{arccot } ' x = \frac{1}{-\csc^2(\text{arccot } x)}
+    $$
+
+    </div>
+
+    then Pythagorize for the missing adjacent length, which is
+    $$\sqrt{x^2 + 1}.$$
+
+    <div class="text-xs sm:text-sm overflow-x-auto p-1 sm:overflow-hidden border-2 border-[var(--white)] rounded-lg">
+
+    <span class="mt-3">Finally, substitute: </span>
+
+    $$
+    \begin{align}
+    \text{arccot }' x &= \frac{1}{-\csc^2(\text{arccot } x)} \notag \\
+      &= \frac{1}{-\csc^2\theta} \notag \\
+      &= \frac{1}{-(\sqrt{x^2 + 1})^2} \notag \\
+    \text{arccot }' x &= -\frac{1}{x^2 + 1}
+    \end{align}
+    $$
+
+    Just like the picture, this derivative is always
+    negative.
+
+    </div>
+
+  </div>
+</div>
