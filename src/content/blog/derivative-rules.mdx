@@ -273,6 +273,35 @@ f'(x)              &= \lim_{h \to 0} \frac{f(x+h) - f(x)}{h} \notag \\
 \end{align}
 $$
 
+> But what about non-integers?
+
+The chain rule (discussed later) generalizes<sup><a href="https://math.stackexchange.com/a/70988" target="_blank">Math SE</a></sup> the power
+rule to the rationals:
+
+$$
+\begin{aligned}
+\text{Let } p &= \text{an integer} \\
+\frac{d}{dx} x^{p/q} &= \frac{d}{dx} (x^p)^{1/q} \\
+  &= \frac{1}{q} (x^p) ^{1/q-1} \frac{d}{dx} (x^p) \\
+  &= \frac{p}{q} (x^p)^{1/q-1}x^{p-1} \\
+  &= \frac{p}{q} x^{p/q - p}x^{p-1} \\
+\frac{d}{dx} x^{p/q} &= \frac{p}{q} x^{p/q-1}
+\end{aligned}
+$$
+
+and the reals:
+
+$$
+\begin{aligned}
+\text{Let }r &= \text{a real number} \\
+\frac{d}{dx} x^r &= \frac{d}{dx} e^{r\ln x} \\
+  &= e^{r \ln x} (r \frac{d}{dx} \ln x) \\
+  &= e^{r \ln x} \times r \times \frac{1}{x} \\
+  &= x^r \times \frac{r}{x} \\
+  &= rx^{r-1}
+\end{aligned}
+$$
+
 </div>
 
 ## quotient rule
