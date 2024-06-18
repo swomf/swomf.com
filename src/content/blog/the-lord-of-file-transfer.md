@@ -26,7 +26,7 @@ watching the progress bar update, then be done with it.
 
 Nah. Let's forget this forever.
 
-<a href="https://f-droid.org/packages/com.termux/" target="_blank">Termux</a>
+[Termux](https://f-droid.org/packages/com.termux/)
 is a free open-source Android
 app that shoves a Linux terminal on your phone. It's useful for a load of tiny
 day-to-day utilities, such as `ping` to lie-detect your "four bars of WiFi",
@@ -153,12 +153,11 @@ Anyone can read and write copy-pastable code into a tutorial. But the spirit of
 Termux is the spirit of Linux: we read manpages and debug errors. Let's go.
 
 Search up
-<a href="https://duckduckgo.com/?q=file+uploading+with+python+flask" target="_blank">
-File uploading with Python Flask</a>.
+[File uploading with Python Flask](https://duckduckgo.com/?q=file+uploading+with+python+flask).
 
 Look for anything that says documentation... for me, it was this
-<a href="https://flask.palletsprojects.com/en/2.3.x/patterns/fileuploads" target="_blank">
-PalletsProjects 2.3.x link</a>. Let's skim it real quick.
+[PalletsProjects 2.3.x link](https://flask.palletsprojects.com/en/2.3.x/patterns/fileuploads).
+Let's skim it real quick.
 
 Looks like we have example code from the docs itself; the docs are the tutorial.
 Let's copy-paste this into a `main.py` file, changing the necessary fillers and
@@ -228,21 +227,19 @@ def download_file(name):
 
 When we run the app with `python3 main.py`, _nothing happens_. Let's search
 up how to actually serve... while we're at it, let's
-<a href="https://duckduckgo.com/?q=python+flask+run+app+with+https&t=ffab&ia=web)" target="_blank">
-search up how to serve with HTTPS </a>specifically!
+[search up how to serve with HTTPS](<https://duckduckgo.com/?q=python+flask+run+app+with+https&t=ffab&ia=web)>)
+specifically!
 
 Looks like we've got no docs here. Next bet in the chain is StackOverflow,
 before we start moving to tutorial websites and blog posts.
 
-<a href="https://stackoverflow.com/questions/29458548/can-you-add-https-functionality-to-a-python-flask-web-server" target="_blank">
-https://stackoverflow.com/questions/29458548/can-you-add-https-functionality-to-a-python-flask-web-server</a>
+https://stackoverflow.com/questions/29458548/can-you-add-https-functionality-to-a-python-flask-web-server
 
 According to the question, we forgot to add `app.run()` at the end of our file.
 Boohoo.
 
 According to the
-<a href="https://stackoverflow.com/a/42906465" target="_blank">
-first answer</a>, we need to add the following to the end of our code:
+[first answer](https://stackoverflow.com/a/42906465), we need to add the following to the end of our code:
 
 ```python
 context = ('local.crt', 'local.key') #certificate and key files
@@ -254,7 +251,8 @@ these `local.crt` and `local.key` files, we can actually generate the SSL
 _ad hoc_ instead, which means "on demand for a short time."
 
 > To generate local.crt and local.key see Method 2 of:
-> <a href="https://kracekumar.com/post/54437887454/ssl-for-flask-local-development" target="_blank">kracekumar.com/post/54437887454/ssl-for-flask-local-development</a>  
+> [kracekumar.com/post/54437887454/ssl-for-flask-local-development](https://kracekumar.com/post/54437887454/ssl-for-flask-local-development)
+>
 > <cite> andyandy Jun 20, 2017 at 16:42</cite>
 
 ```python
@@ -290,9 +288,9 @@ rust-std-aarch64-linux-android/stable [installed]
 # up our problem online now, then -- no clear way out.
 ```
 
-<a href="https://duckduckgo.com/?q=error+is+aarch64+linux+ar+installed" target="_blank">DuckDuckGo</a>
+[DuckDuckGo](https://duckduckgo.com/?q=error+is+aarch64+linux+ar+installed)
 shows us a
-<a href="https://github.com/termux/termux-packages/discussions/8214" target="_blank">GitHub link</a>
+[GitHub link](https://github.com/termux/termux-packages/discussions/8214)
 that tells us to install `binutils`.
 
 ```bash
@@ -325,13 +323,9 @@ $ git commit # You'll be put into vim or nano.
 We're not chumps. We go the full mile. Since we already have URLs that
 can access uploaded content, all we need to do is add a way to conveniently
 list them in our HTML. If you don't already know how to get these hyperlinks,
-<a href="https://duckduckgo.com/q=how+to+make+a+link+in+html" target="_blank">
-search it up
-</a>
+[search it up](https://duckduckgo.com/q=how+to+make+a+link+in+html)
 and skim the
-<a href="https://developer.mozilla.org/en-US/docs/Learn/HTML/Introduction_to_HTML/Creating_hyperlinks#anatomy_of_a_link" target="_blank">
-docs
-</a>
+[docs](https://developer.mozilla.org/en-US/docs/Learn/HTML/Introduction_to_HTML/Creating_hyperlinks#anatomy_of_a_link)
 specifically.
 
 ```python
@@ -386,9 +380,7 @@ Yes, this duct-taped code uses bad practices.
   from `curl cht.sh/openssl | less`, which would be arguably easier for both end
   users who will now hit "Ignore cert warning" less often, and new Termux
   users who will be familiarized with basic SSL management and the
-    <a href="https://cheat.sh" target="_blank">
-    cheat.sh
-    </a>
+  [cheat.sh](https://cheat.sh)
   website.
   </li>
   <li>

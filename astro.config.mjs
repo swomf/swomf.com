@@ -7,12 +7,22 @@ import react from "@astrojs/react";
 
 import tailwind from "@astrojs/tailwind";
 
+import rehypeExternalLinks from 'rehype-external-links';
+
 // https://astro.build/config
 export default defineConfig({
   site: 'https://swomf.codeberg.page',
   integrations: [mdx(), sitemap(), react(), tailwind()],
   markdown: {
     remarkPlugins: [remarkMath],
-    rehypePlugins: [rehypeKatex]
+    rehypePlugins: [
+      rehypeKatex,
+      [
+        rehypeExternalLinks,
+        {
+          target: '_blank'
+        }
+      ],
+    ]
   }
 });
