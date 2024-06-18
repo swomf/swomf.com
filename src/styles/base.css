@@ -11,7 +11,7 @@ body {
   --white: #e8e6e3;
   --blue: #408ce3;
   --dark-blue: #2062ad;
-  @apply flex min-h-full w-full px-1 sm:min-w-[720px] max-w-[720px] flex-col font-mono mx-auto
+  @apply flex min-h-full w-full px-1 max-w-[720px] flex-col font-mono mx-auto
   bg-[var(--black)] text-[var(--white)]
   selection:bg-[var(--white)] selection:bg-opacity-70 selection:text-[var(--black)]
   text-base;
