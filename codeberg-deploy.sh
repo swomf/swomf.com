@@ -14,6 +14,7 @@ pnpm build
 if [[ -d "${pages_repo_dir}" && -d "${pages_repo_dir}/.git" ]]; then
   arrow_msg "Syncing ${pages_repo_dir} to origin/pages via reset"
   cd ${pages_repo_dir}
+  git fetch
   git reset origin/pages &> /dev/null
   cd ..
 else
