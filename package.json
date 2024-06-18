@@ -14,13 +14,13 @@
   "dependencies": {
     "@astrojs/check": "^0.5.10",
     "@astrojs/mdx": "^2.3.1",
-    "@astrojs/react": "^3.5.0",
+    "@astrojs/react": "^3.6.0",
     "@astrojs/rss": "^4.0.6",
-    "@astrojs/sitemap": "^3.1.5",
+    "@astrojs/sitemap": "^3.1.6",
     "@astrojs/tailwind": "^5.1.0",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
-    "astro": "^4.10.2",
+    "astro": "^4.10.3",
     "fuse.js": "^7.0.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -32,7 +32,7 @@
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.13",
-    "globals": "^15.4.0",
+    "globals": "^15.6.0",
     "husky": "^9.0.11",
     "prettier": "^3.3.2",
     "prettier-plugin-astro": "^0.13.0"
