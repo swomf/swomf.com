@@ -2,24 +2,29 @@
 set -eo pipefail
 
 arrow_msg() {
-    echo "$(tput setaf 2)$(tput bold) => $(tput sgr0)$(tput bold)${1}$(tput sgr0)"
+  echo "$(tput setaf 2)$(tput bold) => $(tput sgr0)$(tput bold)${1}$(tput sgr0)"
 }
 current_commit=$(git log --pretty=format:'%H' -n 1)
+pages_push_location="https://codeberg.org/swomf/pages"
+pages_repo_dir=".codeberg-deploy.d"
 
 arrow_msg "Building static directories"
 pnpm build
 
-arrow_msg "Making TEMPDIR"
-some_dir=$(mktemp -d)
-arrow_msg "Cloning to TEMPDIR"
-git clone --no-checkout https://codeberg.org/swomf/pages ${some_dir}
-if [ -d "dist" ]; then
-  arrow_msg "Removing dist/.git to replace with TEMPDIR/.git"
-  rm -rf dist/.git
+if [[ -d "${pages_repo_dir}" && -d "${pages_repo_dir}/.git" ]]; then
+  arrow_msg "Syncing ${pages_repo_dir} to origin/pages via reset"
+  cd ${pages_repo_dir}
+  git reset origin/pages &> /dev/null
+  cd ..
+else
+  arrow_msg "Syncing ${pages_repo_dir} to origin/pages via clone"
+  rm -rf ${pages_repo_dir}
+  git clone --no-checkout ${pages_push_location} ${pages_repo_dir}
 fi
-arrow_msg "Moving TEMPDIR/.git to dist/"
-mv ${some_dir}/.git dist/
 
+arrow_msg "Copying ${pages_repo_dir}/.git to dist/"
+rm -rf dist/.git
+cp -R ${pages_repo_dir}/.git dist/
 
 arrow_msg "Committing ${current_commit}"
 cd dist
