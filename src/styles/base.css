@@ -64,6 +64,36 @@ body {
   }
   .prose *:not(a) {
   } */
+  .tooltip,
+  .prose tooltip {
+    @apply text-yellow-300 relative underline decoration-dotted;
+  }
+  .tooltip tip-after,
+  .prose tooltip tip-after {
+    @apply bg-[var(--blacker)] text-[var(--white)]
+    rounded-lg p-2 w-full text-xs top-4 left-1/2 -translate-x-1/2 absolute z-10
+    border-yellow-300 border opacity-0 pointer-events-none
+    invisible transition-opacity duration-200;
+  }
+  .tooltip:focus tip-after,
+  .tooltip:hover tip-after,
+  .prose tooltip:focus tip-after,
+  .prose tooltip:hover tip-after {
+    @apply opacity-100 transition-opacity duration-200 visible;
+  }
+  /* .tooltip tip-top,
+  .prose tooltip tip-top {
+    @apply bg-[var(--blacker)] text-[var(--white)]
+    rounded-lg p-2 text-xs w-[80vw] fixed top-4 left-1/2 -translate-x-1/2 z-10
+    border-yellow-300 border opacity-0 pointer-events-none
+    invisible transition-opacity duration-200;
+  }
+  .tooltip:focus tip-top,
+  .tooltip:hover tip-top,
+  .prose tooltip:focus tip-top,
+  .prose tooltip:hover tip-top {
+    @apply opacity-100 transition-opacity duration-200 visible;
+  } */
 }
 .prose {
   @apply prose-img:rounded-xl
