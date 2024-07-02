@@ -39,11 +39,11 @@ Put this on your Android, and you'll be a walking server.
 
 _Let's speed in._
 
-<small>
-NOTE: This guide assumes you installed Termux 5 seconds ago, and can
-read error messages. And if you really *did* install Termux 5 seconds
-ago, please run `pkg upgrade`.
-</small>
+<div class="text-xs">
+  NOTE: This guide assumes you installed Termux 5 seconds ago, and can read
+  error messages. And if you really *did* install Termux 5 seconds ago, please
+  run `pkg upgrade`.
+</div>
 
 ## 1. Sending via `python3 -m http.server`
 
@@ -77,10 +77,10 @@ on HTTP instead of HTTPS.
 Finally, <kbd><kbd>CTRL</kbd>+<kbd>C</kbd></kbd> will interrupt the program.
 
 <b>
-The `python3 -m http.server` oneliner is enough for most people and most
-situations. In fact, I even `alias py=python3` in `.bashrc`, since doing this
-operation in Windows uses `py -m http.server` (typing `python` in PowerShell
-redirects you to Microsoft Store). If you want, you can stop here.
+  The `python3 -m http.server` oneliner is enough for most people and most
+  situations. In fact, I even `alias py=python3` in `.bashrc`, since doing this
+  operation in Windows uses `py -m http.server` (typing `python` in PowerShell
+  redirects you to Microsoft Store). If you want, you can stop here.
 </b>
 
 ---
@@ -120,12 +120,17 @@ Note that you'll need a text editor, like `nano` or `vim`, if you're developing
 from your phone.
 
 <details>
-<summary> How do I use vim? </summary>
+  <summary> How do I use vim? </summary>
   <p class="ml-5">
-  `vim` is an efficient modal text-editor for headless (non-GUI) environments,
-  but it has a skill floor (try `vimtutor`). For the bare minimum:
-    <li class="ml-10">Hit <kbd>i</kbd> to enter INSERT mode </li> 
-    <li class="ml-10">Hit <kbd>ESC</kbd> then type <kbd>:wq!</kbd> to run the save and quit commands.</li> 
+    `vim` is an efficient modal text-editor for headless (non-GUI) environments,
+    but it has a skill floor (try `vimtutor`). For the bare minimum:
+    <li class="ml-10">
+      Hit <kbd>i</kbd> to enter INSERT mode{" "}
+    </li>
+    <li class="ml-10">
+      Hit <kbd>ESC</kbd> then type <kbd>:wq!</kbd> to run the save and quit
+      commands.
+    </li>
   </p>
 </details>
 
@@ -364,28 +369,29 @@ file-transfer
     └── test.txt
 ```
 
-<small>
-Yes, this duct-taped code uses bad practices.
-  <li>
-  We returned HTML as a string rather than using Flask's Jinja templating
-  engine.
-  </li>
-  <li>
-  We didn't check if the files/directories we serve in storage/ are actually
-  files, rather than folders. There are no size limits either.
-  </li>
-  <li>
-  We used ad hoc instead of researching HTTPS, realizing Linux boxes use
-  the openssl command to make certificates, then running the first 3 commands
-  from `curl cht.sh/openssl | less`, which would be arguably easier for both end
-  users who will now hit "Ignore cert warning" less often, and new Termux
-  users who will be familiarized with basic SSL management and the
-  [cheat.sh](https://cheat.sh)
-  website.
-  </li>
-  <li>
-  We didn't add a `requirements.txt` via `pip freeze > requirements.txt`, nor
-  did we add a `README.md` that explains how to use the project.
-  </li>
-But it works, it's tiny, and it isn't meant to be robust.
-</small>
+<div class="text-xs sm:text-sm">
+  Yes, this duct-taped code uses bad practices.
+  <ul>
+    <li>
+      We returned HTML as a string rather than using Flask's Jinja templating
+      engine.
+    </li>
+    <li>
+      We didn't check if the files/directories we serve in storage/ are actually
+      files, rather than folders. There are no size limits either.
+    </li>
+    <li>
+      We used ad hoc instead of researching HTTPS, realizing Linux boxes use the
+      openssl command to make certificates, then running the first 3 commands
+      from `curl cht.sh/openssl | less`, which would be arguably easier for both
+      end users who will now hit "Ignore cert warning" less often, and new
+      Termux users who will be familiarized with basic SSL management and the
+      [cheat.sh](https://cheat.sh) website.
+    </li>
+    <li>
+      We didn't add a `requirements.txt` via `pip freeze > requirements.txt`,
+      nor did we add a `README.md` that explains how to use the project.
+    </li>
+    But it works, it's tiny, and it isn't meant to be robust.
+  </ul>
+</div>
