@@ -10,6 +10,8 @@ updatedDate: "Apr 25 2024"
 heroImage: "/src/assets/images/the-lord-of-file-transfer.jpg"
 ---
 
+import Img from "../../components/Img.astro";
+
 File transfer is funny.
 
 Usually people shove things onto Google Drive/Dropbox, email themselves, text
@@ -72,7 +74,11 @@ Now use a client machine to visit your device in a browser, e.g.
 192.168.1.2:8000 or epicandroidname:8000, ignoring warnings complaining we're
 on HTTP instead of HTTPS.
 
-![Example of "Directory listing for /"](/blog-pictures/the-lord-of-file-transfer-01.jpg)
+<Img
+  src="/src/assets/images/the-lord-of-file-transfer-01.jpg"
+  alt='Example of "Directory listing for /"'
+  loading="lazy"
+/>
 
 Finally, <kbd><kbd>CTRL</kbd>+<kbd>C</kbd></kbd> will interrupt the program.
 
