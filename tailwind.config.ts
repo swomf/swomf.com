@@ -6,6 +6,9 @@ module.exports = {
     // if one breakpoint is not enough for you
     screens: {
       sm: "640px",
+      dpr: {
+        raw: 'only screen and (min-device-pixel-ratio: 1.15)'
+      }
     },
     fontFamily: {
       mono: ["Hack-Regular", "monospace"],
