@@ -1,0 +1,797 @@
+---
+title: "Wizardless Linux"
+description: "Are hands-on Linux installs the same?"
+tags:
+  - linux
+pubDate: "August 14 2024"
+# updatedDate: "Apr 25 2024"
+heroImage: "/src/assets/images/wizardless-linux.jpg"
+---
+
+An installation wizard makes two assumptions:
+
+- It knows all the initial configurations a user may want
+- It won't explode in the user's face
+
+[Arch](https://wiki.archlinux.org/title/Installation_guide),
+[Gentoo](https://wiki.gentoo.org/wiki/Handbook:AMD64/Full/Installation), and
+[Void](https://docs.voidlinux.org/installation/guides/chroot.html) Linux have very hand-tunable initial
+installations, so not only does a wizard become harder
+to make, but it's often more worthwhile to have users
+understand their system and how to read its manuals.
+Plus, it's fun to DIY!
+
+That being said, if you have too much fun, then your
+system will be a shop car that never gets out of the
+garage.
+
+Let's install a wizardless Linux.
+
+## 1. prepare a usb
+
+- Get and verify a <tooltip>disk image<tip-after>a bit-by-bit copy of a drive</tip-after></tooltip>
+  ([Arch §1.1 - §1.2](https://wiki.archlinux.org/title/Installation_guide#Acquire_an_installation_image),
+  [Gentoo](https://wiki.gentoo.org/wiki/Handbook:AMD64/Installation/Media#Gentoo_Linux_installation_media),
+  [Void](https://docs.voidlinux.org/installation/index.html#downloading-installation-media))
+  - If you plan to unload a <tooltip>rootfs tarball<tip-after>a TAR archive of everything under /</tip-after></tooltip>
+    onto your internal
+    drive, you can use any distro's disk image
+  - Verify the image isn't corrupted by checking if the
+    image's sha256sum hash is in your respective sha256sum.txt
+    ```bash
+    # Linux example
+    $ grep "$(sha256sum linux-mint.iso)" sha256sum.txt
+    # Windows example
+    $ CertUtil -hashfile cool-linux-distro.iso SHA256
+    $ find "PASTE_HASH_HERE" sha256sum.txt
+    ```
+  - Verify the image is authentic using a key verification
+    ([Arch §1.2](https://wiki.archlinux.org/title/Installation_guide#Verify_signature),
+    [Gentoo](https://wiki.gentoo.org/wiki/Handbook:AMD64/Installation/Media#Verifying_the_downloaded_files),
+    [Void](https://docs.voidlinux.org/installation/index.html#verifying-images)) (might need [GPG4Win](https://www.gpg4win.org/download.html) or [minisign](https://github.com/jedisct1/minisign))
+- Write the disk image onto a thumb drive, then boot
+  - Click-and-drag the .iso image onto a
+    [Ventoy](https://www.ventoy.net/en/download.html)-formatted USB, or use
+    [Rufus](https://github.com/pbatard/rufus), or see
+    [Gentoo § Writing](https://wiki.gentoo.org/wiki/Handbook:AMD64/Installation/Media#Writing_the_boot_media)
+  - Boot from the thumb drive by either changing your
+    computer's boot order in the BIOS, or by entering
+    your boot manager's boot menu
+    (<kbd class="!text-red-500">C EXIT \<ENTER\></kbd> in a GRUB menu)
+
+## 1.5 text
+
+- If you aren't QWERTY/US or your console font has a poor size, see
+  [Arch §1.5](https://wiki.archlinux.org/title/Installation_guide#Set_the_console_keyboard_layout_and_font)
+- If needed, double a console font size via `setfont -d`
+- Instead of using alt+arrow or ctrl+alt+function key, consider splitting the console with
+
+  <details class="p-1 mr-8 border-2 border-[var(--white)] rounded-lg">
+
+  <summary>tmux or screen</summary>
+
+  C refers to CTRL.
+
+  | action                | tmux            | screen   |
+  | --------------------- | --------------- | -------- |
+  | split up/down         | C-b, "          | C-a, S   |
+  | split left/right      | C-b, %          | C-a, \|  |
+  | change windows\*      | C-b, arrow keys | C-a, tab |
+  | \*initialize new area |                 | C-a, s   |
+  | logout of area        | C+d             | C+a, Q   |
+
+      </details>
+
+## 2. wifi
+
+Unless you're using ethernet, [mobile tethering](https://wiki.archlinux.org/title/Android_tethering), or an offline install setup, connect to WiFi with
+
+- [Arch §1.7 - §1.8](https://wiki.archlinux.org/title/Installation_guide#Connect_to_the_internet) (uses [iwctl](https://cheat.sh/iwctl)), or
+- [Gentoo § Networking](https://wiki.gentoo.org/wiki/Handbook:AMD64/Installation/Networking) (also introduces networking concepts such as IP, DHCP, DNS), or
+- [ArchWiki: wpa_supplicant](https://wiki.archlinux.org/title/Wpa_supplicant#Connecting_with_wpa_cli).
+
+For example,
+
+```bash
+# a. iwctl
+$ iwctl station wlan0 connect mySSID
+
+# b. wpa_supplicant (interface assumed to be wlp2s0)
+$ wpa_supplicant -B -i wlp2s0 -c \
+  <(wpa_passphrase mySSID myPassword)
+
+# c. nmcli (if on some other distro)
+$ nmcli dev wifi con mySSID --ask
+```
+
+Note that your system's time [cannot be wonky](https://wiki.archlinux.org/title/Pacman/Package_signing#Update_system_time_regularly)
+if you want SSL and HTTPS to work.
+
+```bash
+$ hwclock --systohc # or
+$ chronyd -q # for Gentoo
+```
+
+<sub>
+  (Sources for timesync commands: [Arch
+  §3.3](https://wiki.archlinux.org/title/Installation_guide#Time),
+  [Gentoo](https://wiki.gentoo.org/wiki/Handbook:AMD64/Installation/Stage#Automatic))
+</sub>
+
+## 3. diskpart
+
+[Gentoo § Disks](https://wiki.gentoo.org/wiki/Handbook:AMD64/Installation/Disks)
+introduces x86_64-efi disks immaculately, and [ArchWiki: Partitioning](https://wiki.archlinux.org/title/Partitioning) also discusses disks for other systems (e.g.
+non-UEFI BIOS boot systems).
+
+As a format-disk tool, `fdisk` (and its simpler curses TUI `cfdisk`)
+are safer to use for some compared to `parted`, as `fdisk` confirms the writing
+at the end of the total operations rather than at the end of each
+individual operation.
+
+In general,
+
+- Partition tables: use the
+  [more modern GPT](https://wiki.archlinux.org/title/Partitioning#Choosing_between_GPT_and_MBR)
+  instead of MBR whenever possible
+- Boot sector (assuming GPT):
+  - Check your system type with [Arch §1.6](https://wiki.archlinux.org/title/Installation_guide#Verify_the_boot_mode)
+  - On a UEFI system, use a [512MiB](https://wiki.archlinux.org/title/EFI_system_partition#Create_the_partition)-[1GiB](https://wiki.gentoo.org/wiki/Handbook:AMD64/Blocks/Disks#Default_partitioning_scheme) [fat32](https://wiki.archlinux.org/title/Installation_guide#Format_the_partitions) EFI partition
+    - [Mount at /efi or /boot](https://wiki.archlinux.org/title/EFI_system_partition#Typical_mount_points).
+      [Gentoo recommends /efi](https://wiki.gentoo.org/wiki/Handbook:AMD64/Installation/Base#Preparing_for_a_bootloader)
+  - On a BIOS system, add a [1MiB](<https://wiki.archlinux.org/title/GRUB#GUID_Partition_Table_(GPT)_specific_instructions>) BIOS boot
+    - do not format this partition with a filesystem
+- [Swap](https://wiki.archlinux.org/title/Swap) partition _(optional)_:
+  - Pick a size based on your RAM with
+    [Gentoo § Disks § What about swap space?](https://wiki.gentoo.org/wiki/Handbook:AMD64/Installation/Disks#What_about_swap_space.3F)
+  - Consider using a resizable
+    [swapfile](https://wiki.archlinux.org/title/Swap#Swap_file) or
+    [BTRFS' builtin swap subvolume](https://wiki.archlinux.org/title/Btrfs#Swap_file)
+    within your Linux filesystem rather than having a
+    separate swap partition at all.
+- Main Linux filesystem partition:
+
+  - _(optional)_
+    cryptsetup
+    a LUKS partition and treat /dev/mapper/cryptroot_partition_name like you would /dev/sdaX. See [Gentoo: dm-crypt](https://wiki.gentoo.org/wiki/Dm-crypt/en#Creating_an_encrypted_storage_platform), [ArchWiki: dm-crypt](https://wiki.archlinux.org/title/Dm-crypt/Device_encryption#Encrypting_devices_with_cryptsetup), [cht.sh/cryptsetup](https://cheat.sh/cryptsetup).
+
+    <details class="p-1 mr-16 border-2 border-[var(--white)] rounded-lg">
+
+    <summary> What is LUKS? </summary>
+
+    `dm-crypt` (frontend: `cryptsetup`)
+    uses <u>d</u>evice <u>m</u>apper to map a block device like
+    /dev/sda, and also encrypts the device with the
+    kernel <u>crypt</u>o API. [source](https://gitlab.com/cryptsetup/cryptsetup/-/wikis/DMCrypt)
+
+    <u>L</u>inux <u>U</u>nified <u>K</u>ey <u>S</u>etup is a spec that
+    standardizes `dm-crypt` use. For example, LUKS adds a header that shows the
+    encryption cipher used and contains the key (passwords unlock keys which
+    unlock devices).
+    [source](https://wiki.archlinux.org/title/Dm-crypt/Encrypting_an_entire_system)
+
+    [Back up the header safely](https://gitlab.com/cryptsetup/cryptsetup/-/wikis/FrequentlyAskedQuestions#6-backup-and-data-recovery).
+    If you don't like the header, you can either use `dm-crypt`
+    [plain mode](https://wiki.archlinux.org/title/Dm-crypt/Encrypting_an_entire_system#Plain_dm-crypt)
+    ([harder](https://security.stackexchange.com/questions/90468/why-is-plain-dm-crypt-only-recommended-for-experts))
+    or a [detached LUKS header](https://wiki.archlinux.org/title/Dm-crypt/Specialties#Encrypted_system_using_a_detached_LUKS_header).
+    See [ArchWiki: Encrypting an entire system](https://wiki.archlinux.org/title/Dm-crypt/Encrypting_an_entire_system).
+
+    </details>
+
+  - _(optional)_
+    LVM -- within the LUKS partition or without encryption --
+    can be useful for an ext4 or xfs setup, due to LVM's
+    resizable partitions and snapshot system.
+    - Why use LVM?
+      [AskUbuntu](https://askubuntu.com/a/3833);
+      [tldp docs: LVM benefits on a small scale](https://tldp.org/HOWTO/LVM-HOWTO/benefitsoflvmsmall.html)
+    - How? [tldp docs: LVM anatomy](https://tldp.org/HOWTO/LVM-HOWTO/anatomy.html);
+      [rickellis example setup](https://github.com/rickellis/Arch-Linux-Install-Guide?tab=readme-ov-file#lvm-setup)
+      (snapshot setup excluded)
+  - Actual filesystems:
+    - [Btrfs](https://fedoramagazine.org/working-with-btrfs-general-concepts/)
+      with [compress](https://btrfs.readthedocs.io/en/latest/Compression.html)=[zstd](https://www.phoronix.com/review/btrfs-zstd-compress/2)
+      is a high-speed disk-space saving common default
+      - Btrfs
+        [subvolumes](https://btrfs.readthedocs.io/en/latest/Subvolumes.html) create "snapshot barriers"
+    - ZFS is a Btrfs alternative that comes with its own encryption
+      and reliable RAID abilities. However,
+      license incompatibilities complicate the setup
+      and may require the addition of a special
+      repository.
+      ([Arch](https://wiki.archlinux.org/title/Install_Arch_Linux_on_ZFS),
+      [Gentoo](https://wiki.gentoo.org/wiki/ZFS#Installation),
+      [Void](https://docs.voidlinux.org/installation/guides/zfs.html))
+    - ext4 is [often used](https://unix.stackexchange.com/a/525630)
+      over xfs
+      - easy to format: `mkfs.ext4` or `mkfs.xfs`
+      - do NOT support <tooltip>transparent compression<tip-after><b>on-the-fly compression:</b> Instead of the user zipping files manually, the filesystem zips and unzips any file upon access, halving space use. <br />(usable in ZFS, Btrfs)</tip-after></tooltip>
+
+As an example, we'll set up:
+
+- a fat32 EFI partition on /dev/sda1
+- Btrfs subvolumes that [separate /, /var/log, and /home (and has /.snapshots)](https://wiki.archlinux.org/title/Snapper#Suggested_filesystem_layout)
+  - /var/log: logfiles shouldn't be rolled back if we roll back /
+  - /home: rolling back user files doesn't necessitate rolling back root
+  - mount options:
+    - [noatime](https://wiki.archlinux.org/title/Fstab#atime_options)
+      preserves SSDs by not wasting a write on file access times
+    - compress=zstd means compress=zstd:3 (compress at
+      Zstandard level 3)
+      - Higher levels denote more CPU cycles spent in
+        hope of deeper compression, though 3 is a
+        well-respected default. One may increase level or
+        consider a more fervent [compress-force](https://wiki.archlinux.org/title/Btrfs#Compression)=zstd.
+
+```bash
+# Partition disk (assuming EFI system)
+#   /dev/sda1  512MiB    EFI System
+#   /dev/sda2  the rest  Linux filesystem
+cfdisk /dev/sda
+
+# Format boot sector: ESP (EFI System Partition)
+#   On a BIOS system, the boot sector must
+#   *instead* be /dev/sda1 as a 1MiB BIOS boot
+#   partition, without a formatted filesystem
+mkfs.fat -F32 /dev/sda1
+
+# I will name my LUKS partition "cryptroot"
+#   Name it as you please
+#   Note: `--pbkdf pbkdf2` is for
+#         LUKS2 + GRUB2 compatibility.
+#         See savannah.gnu.org/bugs/?59409
+#         and ArchWiki: Dm-crypt/Encrypting_an_entire_system
+cryptsetup luksFormat --pbkdf pbkdf2 /dev/sda2
+cryptsetup luksOpen /dev/sda2 cryptroot
+
+# BTRFS
+#   Didn't LUKS? Use /dev/sda2 instead
+#   Label this ROOT so you can differentiate
+#   entries in lsblk -f (lists blocks with UUIDs)
+mkfs.btrfs -L ROOT /dev/mapper/cryptroot
+mount -t btrfs -o \
+  noatime,compress=zstd \
+  /dev/mapper/cryptroot --mkdir /mnt
+
+# BTRFS subvolumes
+#   @ is just a subvol naming convention.
+#   Later, we'll unmount our BTRFS "holder"
+#   thing, then mount the subvolumes
+btrfs subvolume create /mnt/@
+btrfs sub c /mnt/@home
+btrfs sub c /mnt/@var_log
+btrfs sub c /mnt/@snapshots
+umount /mnt
+
+# BTRFS subvolume mounting
+mount -t btrfs -o \
+  noatime,compress=zstd,subvol=@ \
+  /dev/mapper/cryptroot \
+  --mkdir /mnt
+mount -t btrfs -o \
+  noatime,compress=zstd,subvol=@home \
+  /dev/mapper/cryptroot \
+  --mkdir /mnt/home
+mount -t btrfs -o \
+  noatime,compress=zstd,subvol=@var_log \
+  /dev/mapper/cryptroot \
+  --mkdir /mnt/var/log
+mount -t btrfs -o \
+  noatime,compress=zstd,subvol=@snapshots \
+  /dev/mapper/cryptroot \
+  --mkdir /mnt/.snapshots
+
+# Boot sector
+mount /dev/sda1 --mkdir /mnt/efi
+```
+
+## 4. shove the base system in
+
+Arch users using pacstrap should select mirrors _now_, since
+it will be copied from the base system to the new system ([source](https://wiki.archlinux.org/title/Installation_guide#Select_the_mirrors)):
+
+```bash
+# Arch example (needs reflector package)
+reflector --country US --protocol https \
+  > /etc/pacman.d/mirrorlist
+```
+
+To shove in the base system, either use your package manager
+([pacstrap](https://wiki.archlinux.org/title/Installation_guide#Installation)
+or [xbps](https://docs.voidlinux.org/installation/guides/chroot.html#base-installation)):
+
+```bash
+# Arch example
+#   Install btrfs-progs if you used btrfs
+#   Note: pacstrap is part of arch-install-scripts
+#         and can be used on most distros
+pacstrap -K /mnt base linux linux-firmware man btrfs-progs
+
+# Void example
+mkdir -p /mnt/var/db/xbps/keys
+cp /var/db/xbps/keys/* /mnt/var/db/xbps/keys
+XBPS_ARCH=x86_64-musl
+REPO=https://repo-default.voidlinux.org/current/musl
+xbps-install -S -r /mnt -R "$REPO" base-system
+```
+
+or verify and use a rootfs tarball
+([Arch](<https://wiki.archlinux.org/title/Install_Arch_Linux_from_existing_Linux#Method_A:_Using_the_bootstrap_tarball_(recommended)>),
+[Gentoo](https://wiki.gentoo.org/wiki/Handbook:AMD64/Installation/Stage#Graphical_browsers),
+[Void](https://docs.voidlinux.org/installation/guides/chroot.html#the-rootfs-method)):
+
+```bash
+# Arch example (get tar.zst, tar.zst.sig, sha256sums.txt)
+SOME_MIRROR= # some site
+LATEST=archlinux-bootstrap-x86_64.tar.zst
+wget $SOME_MIRROR/archlinux/iso/latest/$LATEST{,.sig}
+wget https://archlinux.org/iso/latest/sha256sums.txt
+sha256sum -c sha256sums.txt
+gpg --keyserver-options auto-key-retrieve --verify \
+  $LATEST.sig $LATEST
+tar xf $LATEST -C /mnt --numeric-owner
+
+# Gentoo example (get .tar.xz, .tar.xz.asc, .tar.xz.sha256,)
+SITE=https://distfiles.gentoo.org/releases/amd64/autobuilds/current-stage3-amd64-hardened-openrc
+LATEST=$(curl -L $SITE \
+  | grep -Eo 'stage3-amd64-hardened-openrc-[0-9]{8}T[0-9]{6}Z.tar.xz' \
+  | sort | tail -1)
+wget $SITE/$LATEST{.sha256,.asc,}
+sha256sum -c $LATEST.sha256
+wget -O - https://qa-reports.gentoo.org/output/service-keys.gpg \
+  | gpg --import
+gpg --verify $LATEST{.asc,}
+tar xpvf $LATEST --xattrs-include='*.*' --numeric-owner -C /mnt
+
+# Void example
+SITE=https://repo-default.voidlinux.org/live/current/
+LATEST=$(curl $SITE \
+  | grep -Eo 'void-x86_64-musl-ROOTFS-[0-9]{8}.tar.xz' \
+  | sort | tail -1)
+wget $SITE/{$LATEST,sha256sum.sig,sha256sum.txt}
+sha256sum -c sha256sum.txt | grep $LATEST
+LATEST_DATE=$(echo $LATEST | grep -Eo '[0-9]{8}')
+wget https://raw.githubusercontent.com/void-linux/void-packages/master/srcpkgs/void-release-keys/files/void-release-$LATEST_DATE.pub
+minisign -V -p void-release-20240314.pub \
+  -x sha256sum.sig -m sha256sum.txt
+tar xvf $LATEST -C /mnt
+```
+
+## 5. configure before boot
+
+Now, based on [Arch §3](https://wiki.archlinux.org/title/Installation_guide#Configure_the_system),
+we need to look at:
+
+- [Arch §3.1](https://wiki.archlinux.org/title/Installation_guide#Fstab) <tooltip>file system table<tip-after><b>/etc/fstab</b> says what filesystem should mount where</tip-after></tooltip>
+
+  - Remember currently mounted filesystems via UUID with the arch-install-scripts
+    package's command:
+    ```bash
+    $ genfstab -U /mnt > /mnt/etc/fstab
+    ```
+  - Or, copy things manually (why?) after splitting
+    the screen. See
+    [Gentoo § Configuring the system § Filesystem information](https://wiki.gentoo.org/wiki/Handbook:AMD64/Full/Installation#Filesystem_information)
+    and
+    [ArchWiki: fstab](https://wiki.archlinux.org/title/Fstab).
+
+- [Arch §3.2](https://wiki.archlinux.org/title/Installation_guide#Chroot) <tooltip>change root<tip-after>Commands will treat /mnt, or whatever directory, as /</tip-after></tooltip>
+  - Use a wrapper (arch-chroot from
+    arch-install-scripts, or Void's xchroot)
+    ```bash
+    $ arch-chroot /mnt
+    ```
+  - or manually chroot. See [Gentoo § Installing a base system § Chrooting](https://wiki.gentoo.org/wiki/Handbook:AMD64/Installation/Base#Chrooting)
+  - /etc/resolv.conf may need to be copied to the new environment beforehand
+    ```bash
+    $ cp --dereference /etc/resolv.conf /mnt/etc/
+    ```
+- If you untar'd a rootfs earlier, update your system.
+  ```bash
+  # Void
+  xbps-install -Su xbps
+  xbps-install -u
+  xbps-install base-system
+  xbps-remove base-container-full
+  # Gentoo
+  # emerge-webrsync may be needed depending on firewall
+  emerge --sync
+  ```
+  <span class="text-xs">
+    (command sources:
+    [Gentoo](https://wiki.gentoo.org/wiki/Handbook:AMD64/Installation/Base#Optional:_Updating_the_Gentoo_ebuild_repository),
+    [Void](https://docs.voidlinux.org/installation/guides/chroot.html#install-base-system-rootfs-method-only))
+  </span>
+- [Arch §2.1](https://wiki.archlinux.org/title/Installation_guide#Select_the_mirrors)/[Gentoo](https://wiki.gentoo.org/wiki/Handbook:AMD64/Installation/Base#Optional:_Selecting_mirrors)/[Void](https://xmirror.voidlinux.org/) _(optional)_ Configure mirrors
+  - For Gentoo's `mirrorselect`, space enables/disables a selection, enter hits OK
+- [Arch §3.3 - §3.4](https://wiki.archlinux.org/title/Installation_guide#Time) localize timezone, locale
+
+  ```bash
+  # TIMEZONE =============
+  # First:
+  #   Find closest REGION/CITY by tab completion
+  ls -l /usr/share/zoneinfo/REGION/CITY
+  # Second:
+  #   Declare timezone to your init system
+  #   A: systemd (Arch) or runit (Void)
+  ln -sf /usr/share/zoneinfo/REGION/CITY /etc/localtime
+  hwclock --systohc
+  #   B: OpenRC (Gentoo)
+  echo "REGION/CITY" > /etc/timezone
+  emerge --config sys-libs/timezone-data
+  # Third:
+  #   Init your time sync daemon
+  #   A: systemd
+  systemctl enable systemd-timesyncd
+  #   B: OpenRC
+  emerge --ask chrony
+  rc-update add chronyd default
+  #   C: runit
+  xbps-install -y chrony
+  sudo ln -sv /etc/sv/chronyd /var/service
+
+  # LOCALE (e.g. US) =====
+  # In /etc/locale.gen, uncomment:
+  #   "en_US.UTF-8 UTF-8"
+  #   and other locales. Then run:
+  locale-gen
+  # In /etc/locale.conf, set the LANG variable
+  echo "LANG=en_US.UTF-8" > /etc/locale.conf
+  ```
+
+  <span class="text-xs">
+    sources: [Gentoo § Installing base system § Timezone and Configure
+    locales](https://wiki.gentoo.org/wiki/Handbook:AMD64/Installation/Base#Timezone);
+    [Gentoo § Tools § Time
+    synchronization](https://wiki.gentoo.org/wiki/Handbook:AMD64/Installation/Tools#Time_synchronization);
+    [Void: Locales and
+    Translations](https://docs.voidlinux.org/config/locales.html); [Void: Date
+    and Time](https://docs.voidlinux.org/config/date-time.html)
+  </span>
+
+- Build confs
+
+  - Gentoo (/etc/portage/make.conf)
+
+    - Required for graphics: [VIDEO_CARDS](https://wiki.gentoo.org/wiki/Handbook:AMD64/Installation/Base#VIDEO_CARDS)
+
+      ```bash
+      # AMD: 'amdgpu radeonsi'
+      # Nvidia: 'nouveau' or proprietary 'nvidia'
+      # Generic: 'intel' or ancient 'intel i915'
+      VIDEO_CARDS="intel nouveau"
+      ```
+
+    - Safe: COMMON_FLAG `"-march=native"`
+      for CPU-specific compilation <span class="text-xs">([source](https://wiki.gentoo.org/wiki/Safe_CFLAGS#Automatic_CPU_detection_by_the_compiler))</span>
+      ```bash
+      # Resolve "-march=native" if using distcc
+      gcc -v -E -x c /dev/null -o \
+        /dev/null -march=native 2>&1 | \
+        grep /cc1 | grep mtune
+      ```
+      - There is also a [RUSTFLAGS](https://wiki.gentoo.org/wiki/Rust#Environment_variables) entry for this
+    - Safe: [Parallel jobs in MAKEOPTS](https://wiki.gentoo.org/wiki/Handbook:AMD64/Installation/Stage#MAKEOPTS)
+      - Minimum between `free -h --giga` and `nproc`
+    - Safe: Tell packages what kind of assembly code your system can use
+      via [CPU_FLAGS\_\<ARCH\>](https://wiki.gentoo.org/wiki/Handbook:AMD64/Installation/Base#CPU_FLAGS_.2A)
+    - Less safe: [Changing -O](https://wiki.gentoo.org/wiki/GCC_optimization#-O)
+      - In general, higher -O values use more runtime memory/space. Hence, -O3
+        [might lead to cache misses](https://forums.gentoo.org/viewtopic-t-1060738-start-0.html#8043780).
+      - -O2 is the "[recommended default](https://wiki.gentoo.org/wiki/Handbook:AMD64/Installation/Stage#CFLAGS_and_CXXFLAGS)",
+        though Rust's default RUSTFLAGS compiles Rust programs at opt-level=[3](https://doc.rust-lang.org/cargo/reference/profiles.html#release).
+    - Wrangling required: [LTO](https://wiki.gentoo.org/wiki/LTO#Enabling_LTO_System-wide)
+
+      - [Runtime RAM and performance may improve](https://wiki.gentoo.org/wiki/LTO#Benefits_of_LTO); compiling is [slower](https://wiki.gentoo.org/wiki/GCC_optimization#Link_Time_Optimization_.28LTO.29) and [may be buggier](https://wiki.gentoo.org/wiki/LTO#Downsides_of_LTO)
+      - Some packages will have to be specifically excluded from
+        LTO:
+
+        ```bash
+        # /etc/portage/env/no-lto
+        USE="${USE} -lto"
+        ```
+
+        ```bash
+        # /etc/portage/package.env
+        # Uses /etc/portage/env files
+        dev-build/cmake no-lto
+        sys-libs/slang no-lto
+        ```
+
+        ([source of example above](https://github.com/libreisaac/portage-config/)) <br />
+        Note: [package.env](https://wiki.gentoo.org/wiki//etc/portage/package.env) can be a directory or folder. <br />
+        Note: Don't confuse package.env (individual package envs) with [package.use](https://wiki.gentoo.org/wiki//etc/portage/package.use) (individual package override flags); see [man 5 portage](https://dev.gentoo.org/~zmedico/portage/doc/man/portage.5.html) for file descriptions
+
+    - More involved: [PGO](https://wiki.gentoo.org/wiki/GCC_optimization#Profile_Guided_Optimization_.28PGO.29) (for package-by-package use)
+
+      - Some binary packages use this upstream, such as [Firefox](https://www.phoronix.com/news/Firefox-Clang-LTO-All-Platforms).
+
+    - Not recommended: directly hardening
+      make.conf <span class="text-xs">([source](https://wiki.gentoo.org/wiki/Hardened/FAQ#Do_I_need_to_pass_any_flags_to_LDFLAGS.2FCFLAGS_in_order_to_turn_on_hardened_building.3F))</span>
+      - Instead of make.conf, profiles are
+        responsible for adding custom
+        gcc hardening flags.
+        See [Gentoo: Hardened/Toolchain#Changes](https://wiki.gentoo.org/wiki/Hardened/Toolchain#Changes)
+    - Optional: Change your "[profile](https://wiki.gentoo.org/wiki/Handbook:AMD64/Installation/Base#Choosing_the_right_profile)". The default
+      profile is based on the rootfs image used -- changing may not be necessary.
+
+      ```bash
+      eselect profile list
+      eselect profile set TARGET
+      ```
+
+      Profiles configure default USE flags, CFLAGS, etc. outside of make.conf.
+
+    - Required: [Kernel](https://wiki.gentoo.org/wiki/Handbook:AMD64/Installation/Kernel#Firmware).
+      - Often, manual kernel setups add
+        support for rare situations or remove "unneeded" software (which isn't
+        loaded until you need it anyway).
+      - Get firmware. The odd-licensed [linux-firmware](https://wiki.gentoo.org/wiki/Handbook:AMD64/Installation/Kernel#Linux_Firmware)
+        is needed for much hardware; sof-firmware
+        [depends on your chip](https://thesofproject.github.io/latest/platforms/index.html)
+        (search your model as shown in `cat /proc/cpuinfo`).
+        Microcode exists too.
+        ```bash
+        mkdir /etc/portage/package.license
+        echo sys-kernel/linux-firmware @BINARY-REDISTRIBUTABLE \
+          > /etc/portage/package.license/linux-firmware
+        emerge --ask linux-firmware
+        ```
+      - Kernel method 1: [gentoo-kernel-bin](https://wiki.gentoo.org/wiki/Handbook:AMD64/Installation/Kernel#Installing_a_distribution_kernel) (depends on installkernel)
+        ```bash
+        # dracut and grub are common choices
+        # to aid booting the kernel
+        echo sys-kernel/installkernel dracut grub \
+          > /etc/portage/package.use/installkernel
+        emerge --ask gentoo-kernel-bin
+        ```
+      - Kernel method 2: genkernel
+      - Kernel method 3: via Makefile (like true cavemen)
+
+  - _(optional)_ Arch users (/etc/makepkg.conf) should see [ArchWiki: makepkg §3](https://wiki.archlinux.org/title/Makepkg#Optimization)
+    - [§3.2](https://wiki.archlinux.org/title/Makepkg#Building_optimized_binaries) Consider `-march=native` in CFLAGS
+    - [§3.4.2](https://wiki.archlinux.org/title/Makepkg#Utilizing_multiple_cores_on_compression) Consider multithreading zstd and/or reducing compression level
+      ```bash
+      COMPRESSZST=(zstd -c -T0 --auto-threads=logical -15 -)
+      ```
+    - [§3.3.1](https://wiki.archlinux.org/title/Makepkg#Parallel_compilation) Consider compiling with more cores
+      ```bash
+      MAKEFLAGS="--jobs=$(nproc)"
+      ```
+    - [§3.3.5](https://wiki.archlinux.org/title/Makepkg#Disable_debug_packages_and_LTO) Consider disabling debug
+
+- [Arch §3.5](https://wiki.archlinux.org/title/Installation_guide#Network_configuration) network (NetworkManager)
+
+  - ```bash
+    $ echo "nice-hostname" > /etc/hostname
+    # alternatively, after getting NetworkManager
+    nmcli general hostname "nice-hostname"
+    ```
+  - Install and enable ([Arch](https://wiki.archlinux.org/title/NetworkManager#Enable_NetworkManager),
+    [Gentoo](https://wiki.gentoo.org/wiki/NetworkManager#Configuration),
+    [Void](https://docs.voidlinux.org/config/network/networkmanager.html)) the NetworkManager daemon. Other network daemons may need to be disabled.
+    - Gentoo: Consider enabling its highly common `dbus` use flag globally.
+    - Daemons (services) are typically handled with:
+      - Arch: systemd ([cht.sh/systemctl](https://cheat.sh/systemctl))
+        - `systemctl enable --now SERVICE` is the same as `systemctl enable SERVICE && systemctl start SERVICE`
+      - [Gentoo: OpenRC](https://wiki.gentoo.org/wiki/OpenRC#Usage)
+        - See [Alpine Linux Wiki: OpenRC](https://wiki.alpinelinux.org/wiki/OpenRC) and the manpages for openrc, rc-update, and rc-status
+      - [Void: runit](https://docs.voidlinux.org/config/services/index.html#basic-usage) (sv and ln)
+
+- [Arch §3.7](https://wiki.archlinux.org/title/Installation_guide#Root_password) users and root (sudo or [doas](https://wiki.gentoo.org/wiki/Doas#Configuration))
+
+  - Create a root password, or don't
+  - Add users. See [Gentoo § Finalizing § Adding a user for daily use](https://wiki.gentoo.org/wiki/Handbook:AMD64/Installation/Finalizing#Adding_a_user_for_daily_use)
+
+  ```bash
+  # Root user
+  #   password should be very secure
+  #   leave password empty to disable
+  passwd
+  # Normal user (joe)
+  #   lowercase is a good idea
+  useradd -m -G users,wheel,audio joe
+  passwd joe
+  #   use "groups" to check groups
+
+  # Using sudo?
+  #   Uncomment "%sudo ALL=(ALL) ALL"
+  #     Lets users in the sudo group use sudo.
+  #     Using "%wheel ALL=(ALL) ALL" exists too
+  EDITOR=nano visudo
+  groupadd sudo # in case it isn't there
+  usermod -aG sudo joe
+  # Using doas?
+  echo "permit :wheel" > /etc/doas.conf
+  chmod -c 0400 /etc/doas.conf
+  ```
+
+- [Arch §3.8](https://wiki.archlinux.org/title/Installation_guide#Boot_loader) preparing to boot
+  - Gentoo OpenRC guys need: a [logger](https://wiki.gentoo.org/wiki/Handbook:AMD64/Installation/Tools#OpenRC) (e.g. sysklogd)
+  - Get programs relating to your filesystems, e.g. btrfs-progs. See [Gentoo § Tools § Filesystem tools](https://wiki.gentoo.org/wiki/Handbook:AMD64/Installation/Tools#Filesystem_tools)
+  - initramfs (mkinitcpio)
+  - Install a bootloader. See [ArchWiki: GRUB § Installation](https://wiki.archlinux.org/title/GRUB#Installation) and [Gentoo § Bootloader](https://wiki.gentoo.org/wiki/Handbook:AMD64/Installation/Bootloader#Default:_GRUB)
+    - Gentoo OpenRC GRUB example:
+      - EFI System partition? /etc/portage/make.conf
+        [needs](https://wiki.gentoo.org/wiki/Handbook:AMD64/Installation/Bootloader#Emerge):
+        ```bash
+        GRUB_PLATFORMS="efi-64"
+        ```
+      - LUKS? /etc/default/grub needs
+        [cryptomount](https://wiki.archlinux.org/title/Dm-crypt/Encrypting_an_entire_system#Configuring_GRUB_2)
+        ([GNU manual agrees](https://www.gnu.org/software/grub/manual/grub/html_node/Simple-configuration.html)) and UUID kernel parameters
+        - [kernel parameters](https://wiki.archlinux.org/title/Dm-crypt/System_configuration#Kernel_parameters): [cryptdevice](https://wiki.archlinux.org/title/Dm-crypt/Encrypting_an_entire_system), maybe [root (unneeded with grub)](https://wiki.archlinux.org/title/Dm-crypt/System_configuration#Kernel_parameters), maybe [swapfile resume](https://wiki.archlinux.org/title/Dm-crypt/System_configuration#resume), and usefully [dracut safety stuff](https://wiki.archlinux.org/title/Dracut#LVM_/_software_RAID_/_LUKS)
+        ```bash
+        GRUB_ENABLE_CRYPTODISK=y
+        GRUB_CMDLINE_LINUX=" cryptdevice=UUID=<use lsblk -f>:cryptroot rd.auto rd.luks=1 "
+        ```
+        and the system will need GRUB with the
+        device-mapper USE flag, and cryptsetup
+        ([source](https://wiki.gentoo.org/wiki/GRUB#Install_on_encrypted_partition))
+        ```bash
+        echo "sys-boot/grub:2 device-mapper" \
+          > /etc/portage/package.use/sys-boot
+        emerge --ask cryptsetup
+        ```
+        and /etc/dracut.conf
+        [needs to tell the initramfs](https://wiki.gentoo.org/wiki/Full_Disk_Encryption_From_Scratch#Dracut)
+        what [modules](https://wiki.gentoo.org/wiki/Dracut#List_of_modules) they need to decrypt LUKS during boot
+        ```bash
+        add_dracutmodules+=" crypt dm rootfs-block "
+        ```
+        and if /boot is part of the LUKS partition (encrypted),
+        [add a keyfile to the initramfs](https://wiki.archlinux.org/title/Dm-crypt/Device_encryption#With_a_keyfile_embedded_in_the_initramfs),
+        [using dracut install_items](https://wiki.gentoo.org/wiki/Dracut#Adding_files_to_the_image) and [rd.luks.key with :/ at the end](https://forums.gentoo.org/viewtopic-t-1062058-start-0.html#8401078)
+        ```bash
+        # With OpenRC/dracut, it doesn't matter where you
+        # store or name the key, as long as it is consistent
+        mkdir /etc/cryptsetup-keys.d
+        dd bs=512 count=4 if=/dev/random \
+          of=/etc/cryptsetup-keys.d/cryptroot.key iflag=fullblock
+        chmod 600 /etc/cryptsetup-keys.d/cryptroot.key
+        cryptsetup luksAddKey /dev/sda2 --pbkdf pbkdf2 \
+          /etc/cryptsetup-keys.d/cryptroot.key
+        # Add to /etc/dracut.conf
+        install_items+=" /etc/cryptsetup-keys.d/cryptroot.key "
+        # Add to kernel parameters, e.g. in
+        # /etc/default/grub
+        GRUB_CMDLINE_LINUX_DEFAULT=" rd.luks.key=/etc/cryptsetup-keys.d/cryptroot.key:/ "
+        ```
+        and of course, due to dracut changes,
+        [rebuild the initramfs](https://wiki.gentoo.org/wiki/Rootfs_encryption#Building_the_image).
+        ```bash
+        # Specify --kver kernel-name if kernel is new
+        dracut -f
+        ```
+      - Finally, [GRUB it up](https://wiki.gentoo.org/wiki/Handbook:AMD64/Installation/Bootloader#Install)
+        - Reminder: LUKS2 can work with GRUB2 if pbkdf2 is used, rather than argon2id ([source](https://wiki.archlinux.org/title/Dm-crypt/Device_encryption#Encrypting_devices_with_cryptsetup))
+        ```bash
+        emerge --ask sys-boot/grub
+        # Setup (BIOS uses `grub-install /dev/sda`)
+        grub-install --efi-directory=/efi
+        grub-mkconfig -o /boot/grub/grub.cfg
+        ```
+    - Consider [Gentoo: GRUB § Password protection of GRUB menu](https://wiki.gentoo.org/wiki/GRUB#Password_protection_of_GRUB_menu)
+    - If you screw up your LUKS password during boot:
+      - A: [GRUB rescue](https://unix.stackexchange.com/a/321825)
+        `cryptomount hd0,gpt2`, insmod normal, normal
+      - B: Dracut rescue: fix initramfs stuff then type `exit` to continue
+        boot process
+
+## 6. configure after boot
+
+Add a community repo ([Gentoo](https://wiki.gentoo.org/wiki/Project:GURU/Information_for_End_Users#Adding_the_GURU_repository)), especially if you're on Arch Linux.
+
+```bash
+# Arch: AUR (use `yay` or `paru`)
+#   base-devel is the build essentials
+#   NOTE: Always audit your makepkg files
+pacman -S base-devel git
+git clone https://aur.archlinux.org/yay
+cd yay
+makepkg -si
+```
+
+Consider using a package management help utility set such as [pacman-contrib](https://unix.stackexchange.com/a/137322)+[pacutils](https://wiki.archlinux.org/title/Pacman/Tips_and_tricks#Identify_files_not_owned_by_any_package) or [gentoolkit](https://wiki.gentoo.org/wiki/Gentoolkit#equery).
+
+Afterwards, get a display working. Download a GUI (Xorg or a Wayland compositor).
+
+- We already have the linux-firmware package (and, for Gentoo, VIDEO_CARDS) set up.
+- If you don't have systemd-logind (e.g. Void, Gentoo), setup [elogind](https://wiki.gentoo.org/wiki/Elogind#USE_flags) or prepare the following manually:
+  - [Setup XDG_RUNTIME_DIR via .zshrc or .bashrc](https://wiki.gentoo.org/wiki/Sway#Starting_Sway_without_elogind_or_systemd)
+  - [Setup seatd for some backends](https://wiki.gentoo.org/wiki/Seatd) ([source](https://wiki.gentoo.org/wiki/Sway#No_backend_was_able_to_open_a_seat))
+    - this may also apply to Hyprland
+    - Why [seatd](https://sr.ht/~kennylevinsen/seatd/)?
+- Gentoo: Organize make.conf
+  - Add normal use flags: X, wayland, dbus, pulseaudio and/or pipewire, etc.
+    ```bash
+    # example (with elogind)
+    LOGINUSE="-systemd elogind"
+    DESKTOPUSE="X wayland gtk gtk3 pulseaudio pipewire introspection"
+    USE="dbus lto ${DESKTOPUSE} ${LOGINUSE}"
+    ```
+  - Set [INPUT_DEVICES](https://wiki.gentoo.org/wiki//etc/portage/make.conf#INPUT_DEVICES) (default=libinput)
+  - If advanced, consider using [sets](https://wiki.gentoo.org/wiki//etc/portage/sets).
+- Install a <tooltip>desktop environment<tip-after>a full-fledged desktop with a taskbar, startmenu, file manager, etc. <br />- GNOME<br />- KDE Plasma Desktop<br />- XFCE4</tip-after></tooltip> or <tooltip class="whitespace-nowrap">window manager<tip-after class="whitespace-normal">a minimal GUI that only handles app windows, leaving the startmenu and others to user setup<br />- Hyprland<br />- sway</tip-after></tooltip>
+  - Find your distro's package name for your DE/WM
+  - Read the relevant ArchWiki/Gentoo Wiki article
+  - Desktop Environments may need a "display manager" i.e. a login greeter such as SDDM or lightdm.
+    - Can be replaced with startx, dbus-launch, or sometimes running the DE/WM manually
+- Set up sound.
+  - PipeWire ([Arch](https://wiki.archlinux.org/title/PipeWire), [Gentoo](https://wiki.gentoo.org/wiki/PipeWire)) is newer and backwards compatible via pipewire-pulse.
+    - Gentoo: be liberal with these USE flags.
+  - PulseAudio ([Arch](https://wiki.archlinux.org/title/PulseAudio), [Gentoo](https://wiki.gentoo.org/wiki/PulseAudio)) is older.
+- GPUs may require further configuration, especially with Intel/Nvidia.
+  - For Intel/Nvidia hybrids, consider PRIME ([Arch](https://wiki.archlinux.org/title/PRIME), [Gentoo](https://wiki.gentoo.org/wiki/Hybrid_graphics#Nvidia_PRIME))
+  - ¯\\\_(ツ)\_/¯
+
+## 6.5 fluffy tweaks
+
+- Make the CLI easier with bash-completions or [ohmyzsh](https://aur.archlinux.org/packages/oh-my-zsh-git).
+- Set up shortcuts in your ~/.zshrc or ~/.bashrc:
+  ```bash
+  alias neofetch='fastfetch --config neofetch.jsonc'
+  alias py=python
+  tldr() {
+    # e.g. `tldr emerge`
+    curl "cht.sh/$1"
+  }
+  ```
+- Set up [WINE](https://wiki.archlinux.org/title/Wine) or flatpaks or nix
+- [Make the console beep noise shut up](https://wiki.archlinux.org/title/PC_speaker#Globally)
+- [Set envvars, e.g. for touchpads on Firefox](https://wiki.archlinux.org/title/Firefox/Tweaks#Pixel-perfect_trackpad_scrolling)
+- Install the [tlp](https://wiki.archlinux.org/title/Tlp) power management daemon
+
+---
+
+## further reading (annotated)
+
+<div class="*:pl-8 *:first-letter:ml-[-2rem]">
+
+DenshiVideo. (2021, October 2). <i>Gentoo: A comfy install guide</i> \[Video\]. YouTube. https://www.youtube.com/watch?v=J7W9MItUSGw <br class="mb-2" />
+This video guides a new user through the Gentoo AMD64
+installation handbook from a live Linux Mint image using
+copy-pasted and explained commands, default configurations, and
+a binary kernel. It does not cover a desktop environment
+or system encryption, but this is a
+consequence of being faithful to the
+Gentoo developer-written installation handbook.
+
+Leo3418. (2022, August 21). <i>Gentoo configuration guide: Full disk LUKS2
+with GRUB and systemd</i>. Leo3418's Personal Site.
+Retrieved August 9, 2024, from https://leo3418.github.io/collections/gentoo-config-luks2-grub-systemd/ <br class="mb-2" />
+Rather than settling for the pbkdf2 key derivation function, the user uses Portage to apply
+a GRUB2 argon2id patch, allowing LUKS2, GRUB2, and an encrypted /boot to coexist.
+Furthermore, GRUB is set up so that, given an incorrect password is entered at boot time,
+the password prompt reappears rather than entering GRUB rescue.
+There is also a discussion on LUKS unlock speed.
+
+libreisaac. (2024, April 6). <i>The best OS: Install Gentoo Linux on an encrypted Btrfs root with optional Sway WM</i>. \[Video\]. YouTube. https://www.youtube.com/watch?v=t0nPxDlFL2I <br class="mb-2" />
+This well-scoped primer covers how
+to replicate Isaac's own hardened OpenRC Gentoo base installation on a given
+UEFI system from a Gentoo live image, featuring nested Btrfs,
+[system-wide lto](https://wiki.gentoo.org/wiki/LTO#Enabling_LTO_System-wide) -O3
+gcc optimizations, a compiled kernel, doas, and a SwayWM setup.
+However, some of his mount options are arguably redundant, such as defaults and
+[discard=async](https://btrfs.readthedocs.io/en/latest/Trim.html); his wpa_cli rundown was flawed
+due to being in a VM (though he rectifies this in the [transcript](https://github.com/libreisaac/gentoo-installation-guide-resources)); his /etc/portage/env/no-lto file has [redundancies](https://wiki.gentoo.org/wiki//etc/portage/package.env); and the tutorial involves
+a git-cloning his Portage configuration (which includes "unsupported" settings such as [PAX_MARKINGS](https://wiki.gentoo.org/wiki/Project:Hardened)) -- even if he explains his options used.<br class="mb-2" />Peculiarly, he mounts the EFI System
+Partition to both /boot and /efi to satisfy Gentoo-specific
+scripts that may expect /boot to be separate, or the ESP to
+be mounted at /efi instead of /boot.
+
+Magyar, C. (2024, March 9). <i>Arch Linux USB</i>. Mags Zone. Retrieved June 27, 2024, from https://mags.zone/help/arch-usb.html <br class="mb-2" />
+This article speedily installs Arch Linux from a live environment to
+a second USB, featuring minimal iwctl, a dual BIOS/UEFI GRUB setup,
+user and polkit configuration, arguably risky journalctl configurations,
+nomodeset for graphics cards, mkinitcpio optimizations, and
+traditional network interface naming (so that interface names do not differ between computers). The tutorial is notable for being endorsed by the
+[ArchWiki](https://wiki.archlinux.org/title/Install_Arch_Linux_on_a_removable_medium#See_also).
+
+Zhou, M., & Guō, Y. (2023, April 19). <i>Arch Linux root on ZFS</i>. OpenZFS. Retrieved July 2, 2024, from https://openzfs.github.io/openzfs-docs/Getting%20Started/Arch%20Linux/Root%20on%20ZFS.html <br class="mb-2" />
+This article covers an Arch Linux rootfs-based UEFI install from a live
+Alpine image, using a `parted` script, rEFInd, and custom repo configurations.
+It is scoped to cover the bare minimum setup required to boot into an Arch ZFS system.
+
+</div>
