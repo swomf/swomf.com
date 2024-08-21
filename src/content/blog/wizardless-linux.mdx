@@ -4,7 +4,7 @@ description: "Are hands-on Linux installs the same?"
 tags:
   - linux
 pubDate: "August 14 2024"
-# updatedDate: "Apr 25 2024"
+updatedDate: "August 21 2024"
 heroImage: "/src/assets/images/wizardless-linux.jpg"
 ---
 
@@ -242,6 +242,7 @@ mkfs.fat -F32 /dev/sda1
 #         LUKS2 + GRUB2 compatibility.
 #         See savannah.gnu.org/bugs/?59409
 #         and ArchWiki: Dm-crypt/Encrypting_an_entire_system
+#                       bottom of § 1
 cryptsetup luksFormat --pbkdf pbkdf2 /dev/sda2
 cryptsetup luksOpen /dev/sda2 cryptroot
 
@@ -304,9 +305,10 @@ or [xbps](https://docs.voidlinux.org/installation/guides/chroot.html#base-instal
 ```bash
 # Arch example
 #   Install btrfs-progs if you used btrfs
-#   Note: pacstrap is part of arch-install-scripts
-#         and can be used on most distros
-pacstrap -K /mnt base linux linux-firmware man btrfs-progs
+#   Consider installing a text editor (nano/vim/neovim)
+#   Consider installing man(uals)
+#   You may need to run `pacman -Sy archlinux-keyring`
+pacstrap -K /mnt base linux linux-firmware man neovim btrfs-progs
 
 # Void example
 mkdir -p /mnt/var/db/xbps/keys
@@ -323,14 +325,19 @@ or verify and use a rootfs tarball
 
 ```bash
 # Arch example (get tar.zst, tar.zst.sig, sha256sums.txt)
-SOME_MIRROR= # some site
+# NOTE: This is a lazy method unendorsed by the ArchWiki
+SOME_MIRROR=https://mirror.rackspace.com/archlinux
 LATEST=archlinux-bootstrap-x86_64.tar.zst
-wget $SOME_MIRROR/archlinux/iso/latest/$LATEST{,.sig}
+wget $SOME_MIRROR/iso/latest/$LATEST{,.sig}
 wget https://archlinux.org/iso/latest/sha256sums.txt
-sha256sum -c sha256sums.txt
+sha256sum -c sha256sums.txt | grep --color $LATEST
 gpg --keyserver-options auto-key-retrieve --verify \
   $LATEST.sig $LATEST
-tar xf $LATEST -C /mnt --numeric-owner
+tar xpvf $LATEST --xattrs-include='*.*' --numeric-owner -C /tmp
+# Copy everything lazily
+cp --archive /tmp/root.x86_64/* /mnt
+# And uncomment a nice mirror
+vim /mnt/etc/pacman.d/mirrorlist
 
 # Gentoo example (get .tar.xz, .tar.xz.asc, .tar.xz.sha256,)
 SITE=https://distfiles.gentoo.org/releases/amd64/autobuilds/current-stage3-amd64-hardened-openrc
@@ -350,13 +357,36 @@ LATEST=$(curl $SITE \
   | grep -Eo 'void-x86_64-musl-ROOTFS-[0-9]{8}.tar.xz' \
   | sort | tail -1)
 wget $SITE/{$LATEST,sha256sum.sig,sha256sum.txt}
-sha256sum -c sha256sum.txt | grep $LATEST
+sha256sum -c sha256sum.txt | grep --color $LATEST
 LATEST_DATE=$(echo $LATEST | grep -Eo '[0-9]{8}')
 wget https://raw.githubusercontent.com/void-linux/void-packages/master/srcpkgs/void-release-keys/files/void-release-$LATEST_DATE.pub
 minisign -V -p void-release-20240314.pub \
   -x sha256sum.sig -m sha256sum.txt
-tar xvf $LATEST -C /mnt
+tar xpvf $LATEST --xattrs-include='*.*' --numeric-owner -C /mnt
+# Yes, the Void rootfs guide only says tar xvf. They're wrong.
 ```
+
+<details class="p-2 border-2 border-[var(--white)] rounded-lg">
+
+<summary class="m-1"> Why --xattrs-include='*.*'? </summary>
+
+Preserving all extended attrs (such as the setUID bit) are important for security software such
+as Pluggable Authentication Module. It is the difference between being
+able to login during a lockscreen:
+
+```bash
+$ ls -l /sbin/unix_chkpwd
+-rwsr-sr-x 1 user arch 26640 Apr 11 04:47 /sbin/unix_chkpwd
+```
+
+and being locked out (unless you switch to a console):
+
+```bash
+$ ls -l /sbin/unix_chkpwd
+-rwxr-xr-x 1 user arch 26640 Apr 11 04:47 /sbin/unix_chkpwd
+```
+
+</details>
 
 ## 5. configure before boot
 
@@ -389,6 +419,10 @@ we need to look at:
     ```
 - If you untar'd a rootfs earlier, update your system.
   ```bash
+  # Arch
+  pacman-key --init
+  pacman-key --populate
+  pacman -Syu base linux linux-firmware man neovim
   # Void
   xbps-install -Su xbps
   xbps-install -u
@@ -400,11 +434,13 @@ we need to look at:
   ```
   <span class="text-xs">
     (command sources:
+    [Arch](https://wiki.archlinux.org/title/Install_Arch_Linux_from_existing_Linux#Initializing_pacman_keyring),
     [Gentoo](https://wiki.gentoo.org/wiki/Handbook:AMD64/Installation/Base#Optional:_Updating_the_Gentoo_ebuild_repository),
     [Void](https://docs.voidlinux.org/installation/guides/chroot.html#install-base-system-rootfs-method-only))
   </span>
 - [Arch §2.1](https://wiki.archlinux.org/title/Installation_guide#Select_the_mirrors)/[Gentoo](https://wiki.gentoo.org/wiki/Handbook:AMD64/Installation/Base#Optional:_Selecting_mirrors)/[Void](https://xmirror.voidlinux.org/) _(optional)_ Configure mirrors
   - For Gentoo's `mirrorselect`, space enables/disables a selection, enter hits OK
+  - See above (start of section 4. shove system) for Arch `reflector` example
 - [Arch §3.3 - §3.4](https://wiki.archlinux.org/title/Installation_guide#Time) localize timezone, locale
 
   ```bash
@@ -595,24 +631,27 @@ we need to look at:
   passwd joe
   #   use "groups" to check groups
 
-  # Using sudo?
+  # Installing and using sudo?
   #   Uncomment "%sudo ALL=(ALL) ALL"
   #     Lets users in the sudo group use sudo.
   #     Using "%wheel ALL=(ALL) ALL" exists too
   EDITOR=nano visudo
   groupadd sudo # in case it isn't there
   usermod -aG sudo joe
-  # Using doas?
+  # Installing and using doas?
   echo "permit :wheel" > /etc/doas.conf
   chmod -c 0400 /etc/doas.conf
   ```
 
 - [Arch §3.8](https://wiki.archlinux.org/title/Installation_guide#Boot_loader) preparing to boot
-  - Gentoo OpenRC guys need: a [logger](https://wiki.gentoo.org/wiki/Handbook:AMD64/Installation/Tools#OpenRC) (e.g. sysklogd)
-  - Get programs relating to your filesystems, e.g. btrfs-progs. See [Gentoo § Tools § Filesystem tools](https://wiki.gentoo.org/wiki/Handbook:AMD64/Installation/Tools#Filesystem_tools)
-  - initramfs (mkinitcpio)
-  - Install a bootloader. See [ArchWiki: GRUB § Installation](https://wiki.archlinux.org/title/GRUB#Installation) and [Gentoo § Bootloader](https://wiki.gentoo.org/wiki/Handbook:AMD64/Installation/Bootloader#Default:_GRUB)
-    - Gentoo OpenRC GRUB example:
+  - Gentoo OpenRC guys need:
+    a [logger](https://wiki.gentoo.org/wiki/Handbook:AMD64/Installation/Tools#OpenRC) (e.g. sysklogd)
+  - Get programs relating to your filesystems, e.g. btrfs-progs.
+    See [Gentoo § Tools § Filesystem tools](https://wiki.gentoo.org/wiki/Handbook:AMD64/Installation/Tools#Filesystem_tools)
+  - and <tooltip>install a bootloader<tip-after>UEFI or MBR firmware load a tiny binary that loads a bootloader (GRUB) that finds out how to shove an initramfs (a tiny Linux) into RAM. Then, the initramfs mounts your storage stuff via fstab, and switches root to it, among other things.</tip-after></tooltip>.
+    See [ArchWiki: GRUB § Installation](https://wiki.archlinux.org/title/GRUB#Installation) and
+    [Gentoo § Bootloader](https://wiki.gentoo.org/wiki/Handbook:AMD64/Installation/Bootloader#Default:_GRUB)
+    - Gentoo OpenRC Dracut+GRUB example:
       - EFI System partition? /etc/portage/make.conf
         [needs](https://wiki.gentoo.org/wiki/Handbook:AMD64/Installation/Bootloader#Emerge):
         ```bash
@@ -621,7 +660,7 @@ we need to look at:
       - LUKS? /etc/default/grub needs
         [cryptomount](https://wiki.archlinux.org/title/Dm-crypt/Encrypting_an_entire_system#Configuring_GRUB_2)
         ([GNU manual agrees](https://www.gnu.org/software/grub/manual/grub/html_node/Simple-configuration.html)) and UUID kernel parameters
-        - [kernel parameters](https://wiki.archlinux.org/title/Dm-crypt/System_configuration#Kernel_parameters): [cryptdevice](https://wiki.archlinux.org/title/Dm-crypt/Encrypting_an_entire_system), maybe [root (unneeded with grub)](https://wiki.archlinux.org/title/Dm-crypt/System_configuration#Kernel_parameters), maybe [swapfile resume](https://wiki.archlinux.org/title/Dm-crypt/System_configuration#resume), and usefully [dracut safety stuff](https://wiki.archlinux.org/title/Dracut#LVM_/_software_RAID_/_LUKS)
+        - [kernel parameters](https://wiki.archlinux.org/title/Dm-crypt/System_configuration#Kernel_parameters): [cryptdevice](https://wiki.archlinux.org/title/Dm-crypt/Encrypting_an_entire_system), maybe [root (unneeded with grub)](https://wiki.archlinux.org/title/Dm-crypt/System_configuration#Kernel_parameters), maybe [swapfile resume](https://wiki.archlinux.org/title/Dm-crypt/System_configuration#resume), perhaps [lvm](https://wiki.gentoo.org/wiki/LVM), and usefully [dracut safety stuff](https://wiki.archlinux.org/title/Dracut#LVM_/_software_RAID_/_LUKS)
         ```bash
         GRUB_ENABLE_CRYPTODISK=y
         GRUB_CMDLINE_LINUX=" cryptdevice=UUID=<use lsblk -f>:cryptroot rd.auto rd.luks=1 "
@@ -672,7 +711,46 @@ we need to look at:
         grub-install --efi-directory=/efi
         grub-mkconfig -o /boot/grub/grub.cfg
         ```
-    - Consider [Gentoo: GRUB § Password protection of GRUB menu](https://wiki.gentoo.org/wiki/GRUB#Password_protection_of_GRUB_menu)
+    - Arch Linux mkinitcpio+GRUB example:
+      - [ArchLinux by default uses BusyBox, though it can use a systemd initramfs as well (not necessarily faster)](https://wiki.archlinux.org/title/Improving_performance/Boot_process#Using_systemd_instead_of_busybox_on_early_init).
+        With [mkinitcpio](https://wiki.archlinux.org/title/Mkinitcpio), you can easily switch to systemd by flipping [these bold words (with or without "encrypt")](https://wiki.archlinux.org/title/Dm-crypt/Encrypting_an_entire_system#Configuring_mkinitcpio).
+      - The Arch docs are straightforward as long as you don't
+        incorrectly copy a UUID:
+        - LUKS?
+          - [Specify encryption](https://wiki.archlinux.org/title/Dm-crypt/Encrypting_an_entire_system#Configuring_mkinitcpio) in /etc/mkinitcpio.conf [HOOKS](https://wiki.archlinux.org/title/Mkinitcpio#Common_hooks)
+            - If you used LVM, [specify lvm2 as well](https://wiki.archlinux.org/title/Dm-crypt/Encrypting_an_entire_system#Configuring_mkinitcpio_6)
+          - then add kernel parameters ([cryptdevice or rd.luks.name](https://wiki.archlinux.org/title/Dm-crypt/Encrypting_an_entire_system#Configuring_the_boot_loader),
+            [and maybe swap](https://wiki.archlinux.org/title/Dm-crypt/System_configuration#resume)), as well as [GRUB cryptomounting ability](https://wiki.archlinux.org/title/Dm-crypt/Encrypting_an_entire_system#Configuring_GRUB_2)
+            ```bash
+            # /etc/default/grub (busybox example)
+            GRUB_ENABLE_CRYPTODISK=y
+            GRUB_CMDLINE_LINUX="cryptdevice=UUID=<use lsblk -o name,uuid>:cryptroot"
+            ```
+            - Pick the _LUKS_ partition ID, not the cryptroot that LUKS mapped to,
+              as we're telling the bootloader to cryptomount /dev/sda2 or whichever
+              to /dev/mapper/cryptroot here.
+              And again, GRUB auto-specifies where root= will be. [source](https://wiki.archlinux.org/title/Dm-crypt/System_configuration#Kernel_parameters)
+          - If /boot is inside the LUKS partition, add a keyfile into the initramfs. See
+            [ArchWiki: Dm-crypt/Device encryption § With a keyfile embedded in the initramfs](https://wiki.archlinux.org/title/Dm-crypt/Device_encryption#With_a_keyfile_embedded_in_the_initramfs).
+            - As mentioned, GRUB
+              doesn't support argon2id yet (code architecturing reasons), so either use pbkdf2
+              ```bash
+              ... (previous 3 cmds)
+              # Name the key cryptroot.key to match what we have so far
+              cryptsetup luksAddKey --pbkdf pbkdf2 \
+                /dev/sda2 /etc/cryptsetup-keys.d/cryptroot.key
+              ```
+              or [use a GRUB patch](https://aur.archlinux.org/packages/grub-improved-luks2-git).
+        - [Generate the initramfs](https://wiki.archlinux.org/title/Mkinitcpio#Manual_generation) and [install GRUB](https://wiki.archlinux.org/title/GRUB#Installation) ([perhaps for MBR](<https://wiki.archlinux.org/title/GRUB#Master_Boot_Record_(MBR)_specific_instructions>)). Don't forget to [grub-mkconfig](https://wiki.archlinux.org/title/GRUB#Generate_the_main_configuration_file).
+          - Rootfs-style installers may get annoyed here due to [/etc/vconsole.conf KEYMAP=us being missing](https://wiki.archlinux.org/title/Linux_console/Keyboard_configuration#Persistent_configuration) or linux not being installed
+          ```bash
+          # Use your kernel package e.g. pacman -S linux-zen
+          mkinitcpio -p linux
+          pacman -S grub efibootmgr # may fail without efibootmgr
+          grub-install --target=x86_64-efi --efi-directory=/efi --bootloader-id=archlinux
+          grub-mkconfig -o /boot/grub/grub.cfg
+          ```
+    - Consider [password protection of GRUB menu](https://wiki.gentoo.org/wiki/GRUB#Password_protection_of_GRUB_menu).
     - If you screw up your LUKS password during boot:
       - A: [GRUB rescue](https://unix.stackexchange.com/a/321825)
         `cryptomount hd0,gpt2`, insmod normal, normal
@@ -712,15 +790,18 @@ Afterwards, get a display working. Download a GUI (Xorg or a Wayland compositor)
     USE="dbus lto ${DESKTOPUSE} ${LOGINUSE}"
     ```
   - Set [INPUT_DEVICES](https://wiki.gentoo.org/wiki//etc/portage/make.conf#INPUT_DEVICES) (default=libinput)
-  - If advanced, consider using [sets](https://wiki.gentoo.org/wiki//etc/portage/sets).
-- Install a <tooltip>desktop environment<tip-after>a full-fledged desktop with a taskbar, startmenu, file manager, etc. <br />- GNOME<br />- KDE Plasma Desktop<br />- XFCE4</tip-after></tooltip> or <tooltip class="whitespace-nowrap">window manager<tip-after class="whitespace-normal">a minimal GUI that only handles app windows, leaving the startmenu and others to user setup<br />- Hyprland<br />- sway</tip-after></tooltip>
+  - Consider using [sets](https://wiki.gentoo.org/wiki//etc/portage/sets).
+- Install a <tooltip>desktop environment<tip-after>a full-fledged desktop with a taskbar, startmenu, file manager, etc. <br />- GNOME<br />- KDE Plasma Desktop<br />- XFCE4</tip-after></tooltip> or <tooltip class="whitespace-nowrap">window manager<tip-after class="whitespace-normal">a minimal GUI that only handles app windows, leaving the startmenu and others to user setup<br />- Hyprland<br />- Sway</tip-after></tooltip>
   - Find your distro's package name for your DE/WM
   - Read the relevant ArchWiki/Gentoo Wiki article
   - Desktop Environments may need a "display manager" i.e. a login greeter such as SDDM or lightdm.
     - Can be replaced with startx, dbus-launch, or sometimes running the DE/WM manually
+  - [Get fonts](https://wiki.archlinux.org/title/Fonts#Families), such as [Source Han Sans](https://packages.gentoo.org/packages/media-fonts/source-han-sans) for languages, [ancient fonts](https://aur.archlinux.org/packages/ttf-ancient-fonts) for cuneiform, or Noto Sans for large Unicode coverage
 - Set up sound.
-  - PipeWire ([Arch](https://wiki.archlinux.org/title/PipeWire), [Gentoo](https://wiki.gentoo.org/wiki/PipeWire)) is newer and backwards compatible via pipewire-pulse.
+  - PipeWire ([Arch](https://wiki.archlinux.org/title/PipeWire), [Gentoo](https://wiki.gentoo.org/wiki/PipeWire)) is newer and backwards compatible with PulseAudio clients (e.g. Firefox) via pipewire-pulse.
     - Gentoo: be liberal with these USE flags.
+    - Don't forget to [systemctl --enable --now --user pipewire-pulse.service.](https://wiki.archlinux.org/title/PipeWire#PulseAudio_clients)
+    - If using a WM, pavucontrol may be useful.
   - PulseAudio ([Arch](https://wiki.archlinux.org/title/PulseAudio), [Gentoo](https://wiki.gentoo.org/wiki/PulseAudio)) is older.
 - GPUs may require further configuration, especially with Intel/Nvidia.
   - For Intel/Nvidia hybrids, consider PRIME ([Arch](https://wiki.archlinux.org/title/PRIME), [Gentoo](https://wiki.gentoo.org/wiki/Hybrid_graphics#Nvidia_PRIME))
@@ -728,7 +809,8 @@ Afterwards, get a display working. Download a GUI (Xorg or a Wayland compositor)
 
 ## 6.5 fluffy tweaks
 
-- Make the CLI easier with bash-completions or [ohmyzsh](https://aur.archlinux.org/packages/oh-my-zsh-git).
+- Make the CLI easier with bash-completions or zsh+[ohmyzsh](https://aur.archlinux.org/packages/oh-my-zsh-git).
+  - Arch: Add ILoveCandy and Color to /etc/pacman.conf options
 - Set up shortcuts in your ~/.zshrc or ~/.bashrc:
   ```bash
   alias neofetch='fastfetch --config neofetch.jsonc'
@@ -741,7 +823,7 @@ Afterwards, get a display working. Download a GUI (Xorg or a Wayland compositor)
 - Set up [WINE](https://wiki.archlinux.org/title/Wine) or flatpaks or nix
 - [Make the console beep noise shut up](https://wiki.archlinux.org/title/PC_speaker#Globally)
 - [Set envvars, e.g. for touchpads on Firefox](https://wiki.archlinux.org/title/Firefox/Tweaks#Pixel-perfect_trackpad_scrolling)
-- Install the [tlp](https://wiki.archlinux.org/title/Tlp) power management daemon
+- Install and enable the [tlp](https://wiki.archlinux.org/title/Tlp) power management daemon
 
 ---
 
