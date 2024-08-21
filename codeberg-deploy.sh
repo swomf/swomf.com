@@ -5,7 +5,7 @@ arrow_msg() {
   echo "$(tput setaf 2)$(tput bold) => $(tput sgr0)$(tput bold)${1}$(tput sgr0)"
 }
 current_commit=$(git log --pretty=format:'%H' -n 1)
-pages_push_location="https://codeberg.org/swomf/pages"
+pages_push_location="git@codeberg.org:swomf/pages.git"
 pages_repo_dir=".codeberg-deploy.d"
 
 arrow_msg "Building static directories"
