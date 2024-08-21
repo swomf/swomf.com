@@ -368,7 +368,7 @@ tar xpvf $LATEST --xattrs-include='*.*' --numeric-owner -C /mnt
 
 <details class="p-2 border-2 border-[var(--white)] rounded-lg">
 
-<summary class="m-1"> Why --xattrs-include='*.*'? </summary>
+<summary class="m-1"> Why `--xattrs-include='*.*'`? </summary>
 
 Preserving all extended attrs (such as the setUID bit) are important for security software such
 as Pluggable Authentication Module. It is the difference between being
@@ -385,6 +385,9 @@ and being locked out (unless you switch to a console):
 $ ls -l /sbin/unix_chkpwd
 -rwxr-xr-x 1 user arch 26640 Apr 11 04:47 /sbin/unix_chkpwd
 ```
+
+This idea is taken from the [Gentoo § The stage file § Installing a stage file](https://wiki.gentoo.org/wiki/Handbook:AMD64/Installation/Stage#Installing_a_stage_file) and should be used when directly
+unpacking a rootfs onto a mountpoint
 
 </details>
 
