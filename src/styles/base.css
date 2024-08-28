@@ -51,6 +51,27 @@ body {
   .prose *:not(a) {
     @apply text-[var(--white)];
   }
+  .h1 a,
+  .h2 a,
+  .h3 a,
+  .h4 a,
+  .h5 a,
+  .h6 a,
+  .prose h1 a,
+  .prose h2 a,
+  .prose h3 a,
+  .prose h4 a,
+  .prose h5 a,
+  .prose h6 a {
+    @apply text-[var(--white)];
+    &:hover {
+      @apply text-[var(--white)] border-b-4 border-[var(--accent)];
+      /*&::after {
+        @apply content-['-'] inline-block ml-2 bg-no-repeat bg-center bg-contain;
+        background-image: url('/gravity-ui-link.svg');
+      }*/
+    }
+  }
   /* .a,
   a:visited,
   a:hover,
