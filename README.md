@@ -20,3 +20,8 @@ cd attempts
 pnpm i
 pnpm run dev
 ```
+
+## licensing
+
+Code: GPLv3  
+Creative content: CC BY-NC-SA 4.0
