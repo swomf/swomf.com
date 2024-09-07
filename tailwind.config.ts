@@ -11,19 +11,49 @@ module.exports = {
       mono: ["Hack-Regular", "monospace"],
     },
 
-      // typography: {
-      //   DEFAULT: {
-      //     css: {
-      //       pre: {
-      //         color: false,
-      //       },
-      //       code: {
-      //         color: false,
-      //       },
-      //     },
-      //   },
-      // },
-    
+    extend: {
+      typography: (theme: (arg0: string) => any) => ({
+        DEFAULT: {
+          css: {
+            "code::before": {
+              content: '""',
+            },
+            "code::after": {
+              content: '""',
+            },
+            ":not(pre) > code": {
+              backgroundColor: "#24292e", // if shiki config is changed
+              color: "#e1e4e8",           // these should also be changed
+              padding: "0.250rem 0.4rem",
+              borderRadius: "0.250rem",
+            },
+          },
+        },
+        // invert: {
+        //   css: {
+        //     ":not(pre) > code": {
+        //       backgroundColor: theme("colors.zinc.900"),
+        //       borderColor: theme("colors.zinc.800"),
+        //     },
+        //   },
+        // },
+      }),
+
+    }
+
+    // typography: {
+    //   DEFAULT: {
+    //     css: {
+    //       pre: {
+    //         color: false,
+    //       },
+    //       code: {
+    //         color: false,
+    //       },
+    //     },
+    //   },
+    // },
+
   },
   plugins: [require("@tailwindcss/typography")],
 };
