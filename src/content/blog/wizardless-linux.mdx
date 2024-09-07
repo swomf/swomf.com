@@ -4,7 +4,7 @@ description: "Are hands-on Linux installs the same?"
 tags:
   - linux
 pubDate: "August 14 2024"
-updatedDate: "August 21 2024"
+updatedDate: "September 7 2024"
 heroImage: "/src/assets/images/wizardless-linux.jpg"
 ---
 
@@ -141,7 +141,7 @@ In general,
       [Gentoo recommends /efi](https://wiki.gentoo.org/wiki/Handbook:AMD64/Installation/Base#Preparing_for_a_bootloader)
   - On a BIOS system, add a [1MiB](<https://wiki.archlinux.org/title/GRUB#GUID_Partition_Table_(GPT)_specific_instructions>) BIOS boot
     - do not format this partition with a filesystem
-- [Swap](https://wiki.archlinux.org/title/Swap) partition _(optional)_:
+- [Swap](https://wiki.archlinux.org/title/Swap) partition or file _(optional)_:
   - Pick a size based on your RAM with
     [Gentoo § Disks § What about swap space?](https://wiki.gentoo.org/wiki/Handbook:AMD64/Installation/Disks#What_about_swap_space.3F)
   - Consider using a resizable
@@ -149,6 +149,7 @@ In general,
     [BTRFS' builtin swap subvolume](https://wiki.archlinux.org/title/Btrfs#Swap_file)
     within your Linux filesystem rather than having a
     separate swap partition at all.
+  - [Reddit: Why use swap?](https://old.reddit.com/r/archlinux/comments/ro4zme/is_swap_really_necessary_anymore_for_desktop/)
 - Main Linux filesystem partition:
 
   - _(optional)_
@@ -562,7 +563,14 @@ we need to look at:
 
       Profiles configure default USE flags, CFLAGS, etc. outside of make.conf.
 
-    - Required: [Kernel](https://wiki.gentoo.org/wiki/Handbook:AMD64/Installation/Kernel#Firmware).
+    - Optional: [ACCEPT_LICENSE](https://wiki.gentoo.org/wiki/Handbook:AMD64/Installation/Base#Optional:_Configure_the_ACCEPT_LICENSE_variable)
+
+      - Don't care about licensing? Use all of them:
+        ```bash
+        ACCEPT_LICENSE="*"
+        ```
+
+    - Required: [Kernel](https://wiki.gentoo.org/wiki/Handbook:AMD64/Installation/Kernel#Firmware)
       - Often, manual kernel setups add
         support for rare situations or remove "unneeded" software (which isn't
         loaded until you need it anyway).
@@ -772,6 +780,7 @@ pacman -S base-devel git
 git clone https://aur.archlinux.org/yay
 cd yay
 makepkg -si
+# or `makepkg -s` then `pacman -U <some.pkg.tar.zst>`
 ```
 
 Consider using a package management help utility set such as [pacman-contrib](https://unix.stackexchange.com/a/137322)+[pacutils](https://wiki.archlinux.org/title/Pacman/Tips_and_tricks#Identify_files_not_owned_by_any_package) or [gentoolkit](https://wiki.gentoo.org/wiki/Gentoolkit#equery).
@@ -803,17 +812,43 @@ Afterwards, get a display working. Download a GUI (Xorg or a Wayland compositor)
 - Set up sound.
   - PipeWire ([Arch](https://wiki.archlinux.org/title/PipeWire), [Gentoo](https://wiki.gentoo.org/wiki/PipeWire)) is newer and backwards compatible with PulseAudio clients (e.g. Firefox) via pipewire-pulse.
     - Gentoo: be liberal with these USE flags.
-    - Don't forget to [systemctl --enable --now --user pipewire-pulse.service.](https://wiki.archlinux.org/title/PipeWire#PulseAudio_clients)
-    - If using a WM, pavucontrol may be useful.
+    - Don't forget to [start the user unit for pipewire-pulse.service.](https://wiki.archlinux.org/title/PipeWire#PulseAudio_clients)
+      ```bash
+      # Arch
+      systemctl enable --now --user pipewire-pulse
+      ```
+    - If using a WM, [pavucontrol](https://wiki.archlinux.org/title/PipeWire#Profiles) may be useful.
   - PulseAudio ([Arch](https://wiki.archlinux.org/title/PulseAudio), [Gentoo](https://wiki.gentoo.org/wiki/PulseAudio)) is older.
-- GPUs may require further configuration, especially with Intel/Nvidia.
-  - For Intel/Nvidia hybrids, consider PRIME ([Arch](https://wiki.archlinux.org/title/PRIME), [Gentoo](https://wiki.gentoo.org/wiki/Hybrid_graphics#Nvidia_PRIME))
-  - ¯\\\_(ツ)\_/¯
+- GPUs may require further configuration, especially with [Intel](https://wiki.archlinux.org/title/Intel_graphics)/[Nvidia](https://wiki.archlinux.org/title/NVIDIA).
+  - For Intel/Nvidia hybrids, it is recommended ([source](https://wiki.archlinux.org/title/NVIDIA_Optimus#Available_methods)) to use [PRIME](https://wiki.archlinux.org/title/PRIME)
+    - Arch Linux's [/usr/bin/prime-run](https://packages.gentoo.org/packages/x11-misc/prime-run) utility is just a shell wrapper [to set these environment variables:](https://wiki.gentoo.org/wiki/Hybrid_graphics#Choosing_when_to_use_the_Nvidia_dGPU)
+      ```bash
+      #!/bin/bash
+      __NV_PRIME_RENDER_OFFLOAD=1 \
+      __VK_LAYER_NV_optimus=NVIDIA_only \
+      __GLX_VENDOR_LIBRARY_NAME=nvidia "$@"
+      ```
+      The nouveau driver's environment variable is simply [DRI_PRIME=1](https://wiki.archlinux.org/title/PRIME#For_open_source_drivers_-_PRIME).
+  - [CUDA requires the proprietary Nvidia driver](https://wiki.archlinux.org/title/GPGPU#CUDA).
+  - To run Nvidia, the loading of the nouveau graphics module will need to be stopped, either by [stopping "kernel mode setting" loading the module from the initramfs stage](https://wiki.archlinux.org/title/NVIDIA#Installation) (may cause bugs such as Electron exit_code=512 GPU errors) or by using a blacklist:
+    ```bash
+    # /usr/lib/modprobe.d/nvidia-utils.conf
+    blacklist nouveau
+    # NOTE: This is included in Arch's nvidia-utils package
+    ```
+  - Make sure your GPU is [actually helping your computer run](https://wiki.archlinux.org/title/Hardware_video_acceleration)
+    via [glxinfo](https://wiki.archlinux.org/title/PRIME#PRIME_render_offload),
+    or [lsmod | grep \<driver name\>](https://wiki.gentoo.org/wiki/NVIDIA/nvidia-drivers#Drivers),
+    or a relevant monitoring tool ([Intel](https://wiki.archlinux.org/title/Intel_graphics#Monitoring), [Nvidia](https://wiki.archlinux.org/title/NVIDIA/Tips_and_tricks#nvidia-smi), [AMD](https://wiki.archlinux.org/title/AMDGPU#Monitoring))
+- Manage flags and [environment variables](https://wiki.archlinux.org/title/Environment_variables#Defining_variables)
+  - Example: Firefox may need the env var [MOZ_USE_XINPUT2=1](https://wiki.archlinux.org/title/Firefox#Touchscreen_gestures_and_pixel-perfect_trackpad_scrolling)
+  - Example: Electron apps [might run on XWayland, not Wayland](https://wiki.archlinux.org/title/Wayland#Configuration_file)
 
 ## 6.5 fluffy tweaks
 
 - Make the CLI easier with bash-completions or zsh+[ohmyzsh](https://aur.archlinux.org/packages/oh-my-zsh-git).
   - Arch: Add ILoveCandy and Color to /etc/pacman.conf options
+    - Using paru? Uncomment BottomUp in /etc/paru.conf options
 - Set up shortcuts in your ~/.zshrc or ~/.bashrc:
   ```bash
   alias neofetch='fastfetch --config neofetch.jsonc'
