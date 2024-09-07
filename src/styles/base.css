@@ -39,7 +39,7 @@ body {
 @layer base {
   .a,
   .prose a {
-    @apply no-underline text-[var(--blue)];
+    @apply no-underline text-[var(--blue)] break-words;
   }
   .a:hover,
   .prose a:hover {
@@ -198,3 +198,22 @@ hr {
     padding: 1em;
   }
 } */
+
+/* Chromium */
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  @apply bg-zinc-600 rounded-md;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  @apply bg-zinc-400;
+}
