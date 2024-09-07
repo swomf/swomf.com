@@ -503,7 +503,7 @@ we need to look at:
       VIDEO_CARDS="intel nouveau"
       ```
 
-    - Safe: COMMON_FLAG `"-march=native"`
+    - Safe: COMMON_FLAG "-march=native"
       for CPU-specific compilation <span class="text-xs">([source](https://wiki.gentoo.org/wiki/Safe_CFLAGS#Automatic_CPU_detection_by_the_compiler))</span>
       ```bash
       # Resolve "-march=native" if using distcc
@@ -597,7 +597,7 @@ we need to look at:
       - Kernel method 3: via Makefile (like true cavemen)
 
   - _(optional)_ Arch users (/etc/makepkg.conf) should see [ArchWiki: makepkg §3](https://wiki.archlinux.org/title/Makepkg#Optimization)
-    - [§3.2](https://wiki.archlinux.org/title/Makepkg#Building_optimized_binaries) Consider `-march=native` in CFLAGS
+    - [§3.2](https://wiki.archlinux.org/title/Makepkg#Building_optimized_binaries) Consider "-march=native" in CFLAGS
     - [§3.4.2](https://wiki.archlinux.org/title/Makepkg#Utilizing_multiple_cores_on_compression) Consider multithreading zstd and/or reducing compression level
       ```bash
       COMPRESSZST=(zstd -c -T0 --auto-threads=logical -15 -)
@@ -618,7 +618,7 @@ we need to look at:
   - Install and enable ([Arch](https://wiki.archlinux.org/title/NetworkManager#Enable_NetworkManager),
     [Gentoo](https://wiki.gentoo.org/wiki/NetworkManager#Configuration),
     [Void](https://docs.voidlinux.org/config/network/networkmanager.html)) the NetworkManager daemon. Other network daemons may need to be disabled.
-    - Gentoo: Consider enabling its highly common `dbus` use flag globally.
+    - Gentoo: Consider enabling its highly common "dbus" use flag globally.
     - Daemons (services) are typically handled with:
       - Arch: systemd ([cht.sh/systemctl](https://cheat.sh/systemctl))
         - `systemctl enable --now SERVICE` is the same as `systemctl enable SERVICE && systemctl start SERVICE`
@@ -723,7 +723,7 @@ we need to look at:
         grub-mkconfig -o /boot/grub/grub.cfg
         ```
     - Arch Linux mkinitcpio+GRUB example:
-      - [ArchLinux by default uses BusyBox, though it can use a systemd initramfs as well (not necessarily faster)](https://wiki.archlinux.org/title/Improving_performance/Boot_process#Using_systemd_instead_of_busybox_on_early_init).
+      - [Arch Linux by default uses BusyBox, though it can use a systemd initramfs as well (not necessarily faster)](https://wiki.archlinux.org/title/Improving_performance/Boot_process#Using_systemd_instead_of_busybox_on_early_init).
         With [mkinitcpio](https://wiki.archlinux.org/title/Mkinitcpio), you can easily switch to systemd by flipping [these bold words (with or without "encrypt")](https://wiki.archlinux.org/title/Dm-crypt/Encrypting_an_entire_system#Configuring_mkinitcpio).
       - The Arch docs are straightforward as long as you don't
         incorrectly copy a UUID:
@@ -763,8 +763,8 @@ we need to look at:
           ```
     - Consider [password protection of GRUB menu](https://wiki.gentoo.org/wiki/GRUB#Password_protection_of_GRUB_menu).
     - If you screw up your LUKS password during boot:
-      - A: [GRUB rescue](https://unix.stackexchange.com/a/321825)
-        `cryptomount hd0,gpt2`, insmod normal, normal
+      - A: [GRUB rescue](https://unix.stackexchange.com/a/321825):
+        `cryptomount hd0,gpt2`, `insmod normal`, `normal`
       - B: Dracut rescue: fix initramfs stuff then type `exit` to continue
         boot process
 
