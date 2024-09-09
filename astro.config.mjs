@@ -30,5 +30,8 @@ export default defineConfig({
         behavior: 'wrap',
       }],
     ]
+  },
+  build: {
+    assets: 'assets'
   }
 });
