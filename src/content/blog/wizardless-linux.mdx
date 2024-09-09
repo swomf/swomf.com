@@ -4,7 +4,7 @@ description: "Are hands-on Linux installs the same?"
 tags:
   - linux
 pubDate: "August 14 2024"
-updatedDate: "September 7 2024"
+updatedDate: "September 9 2024"
 heroImage: "/src/assets/images/wizardless-linux.jpg"
 ---
 
@@ -820,8 +820,10 @@ Afterwards, get a display working. Download a GUI (Xorg or a Wayland compositor)
     - If using a WM, [pavucontrol](https://wiki.archlinux.org/title/PipeWire#Profiles) may be useful.
   - PulseAudio ([Arch](https://wiki.archlinux.org/title/PulseAudio), [Gentoo](https://wiki.gentoo.org/wiki/PulseAudio)) is older.
 - GPUs may require further configuration, especially with [Intel](https://wiki.archlinux.org/title/Intel_graphics)/[Nvidia](https://wiki.archlinux.org/title/NVIDIA).
+
   - For Intel/Nvidia hybrids, it is recommended ([source](https://wiki.archlinux.org/title/NVIDIA_Optimus#Available_methods)) to use [PRIME](https://wiki.archlinux.org/title/PRIME)
-    - Arch Linux's [/usr/bin/prime-run](https://packages.gentoo.org/packages/x11-misc/prime-run) utility is just a shell wrapper [to set these environment variables:](https://wiki.gentoo.org/wiki/Hybrid_graphics#Choosing_when_to_use_the_Nvidia_dGPU)
+    - Arch Linux's [/usr/bin/prime-run](https://packages.gentoo.org/packages/x11-misc/prime-run) utility is just a shell wrapper
+      [to set these environment variables:](https://wiki.gentoo.org/wiki/Hybrid_graphics#Choosing_when_to_use_the_Nvidia_dGPU)
       ```bash
       #!/bin/bash
       __NV_PRIME_RENDER_OFFLOAD=1 \
@@ -829,20 +831,32 @@ Afterwards, get a display working. Download a GUI (Xorg or a Wayland compositor)
       __GLX_VENDOR_LIBRARY_NAME=nvidia "$@"
       ```
       The nouveau driver's environment variable is simply [DRI_PRIME=1](https://wiki.archlinux.org/title/PRIME#For_open_source_drivers_-_PRIME).
-  - [CUDA requires the proprietary Nvidia driver](https://wiki.archlinux.org/title/GPGPU#CUDA).
-  - To run Nvidia, the loading of the nouveau graphics module will need to be stopped, either by [stopping "kernel mode setting" loading the module from the initramfs stage](https://wiki.archlinux.org/title/NVIDIA#Installation) (may cause bugs such as Electron exit_code=512 GPU errors) or by using a blacklist:
-    ```bash
-    # /usr/lib/modprobe.d/nvidia-utils.conf
-    blacklist nouveau
-    # NOTE: This is included in Arch's nvidia-utils package
-    ```
-  - Make sure your GPU is [actually helping your computer run](https://wiki.archlinux.org/title/Hardware_video_acceleration)
+  - CUDA requires the proprietary Nvidia driver ([source](https://wiki.archlinux.org/title/GPGPU#CUDA)).
+  - Nvidia implements its own kernel mode setting ([source](https://wiki.archlinux.org/title/Kernel_mode_setting)).
+    If you remove the kms HOOK
+    [as shown in the Nvidia guide](https://wiki.archlinux.org/title/NVIDIA#Installation),
+    you may need to manually set up
+    [early or late KMS start](https://wiki.archlinux.org/title/Kernel_mode_setting#Late_KMS_start),
+    such as for your iGPU, to avoid errors such as
+    [Electron error code 512](https://bbs.archlinux.org/viewtopic.php?id=298254#p2188264).
+
+    > Add the required module... to the initramfs configuration file
+
+    See
+    [ArchWiki: mkinitcpio § MODULES](https://wiki.gentoo.org/wiki/Dracut#Adding_modules)
+    or [Gentoo: Dracut § Adding modules](https://wiki.gentoo.org/wiki/Dracut#Adding_modules).
+
+  - Make sure your GPU is
+    [actually helping your computer run](https://wiki.archlinux.org/title/Hardware_video_acceleration)
     via [glxinfo](https://wiki.archlinux.org/title/PRIME#PRIME_render_offload),
     or [lsmod | grep \<driver name\>](https://wiki.gentoo.org/wiki/NVIDIA/nvidia-drivers#Drivers),
     or a relevant monitoring tool ([Intel](https://wiki.archlinux.org/title/Intel_graphics#Monitoring), [Nvidia](https://wiki.archlinux.org/title/NVIDIA/Tips_and_tricks#nvidia-smi), [AMD](https://wiki.archlinux.org/title/AMDGPU#Monitoring))
+
 - Manage flags and [environment variables](https://wiki.archlinux.org/title/Environment_variables#Defining_variables)
-  - Example: Firefox may need the env var [MOZ_USE_XINPUT2=1](https://wiki.archlinux.org/title/Firefox#Touchscreen_gestures_and_pixel-perfect_trackpad_scrolling)
-  - Example: Electron apps [might run on XWayland, not Wayland](https://wiki.archlinux.org/title/Wayland#Configuration_file)
+  - Example: Firefox on X11 may need the env var
+    [MOZ_USE_XINPUT2=1](https://wiki.archlinux.org/title/Firefox#Touchscreen_gestures_and_pixel-perfect_trackpad_scrolling)
+  - Example: Electron apps
+    [might run on XWayland, not Wayland](https://wiki.archlinux.org/title/Wayland#Configuration_file)
 
 ## 6.5 fluffy tweaks
 
