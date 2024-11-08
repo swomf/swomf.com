@@ -8,45 +8,128 @@ pubDate: "September 28 2024"
 heroImage: "/src/assets/images/deadbeat-laplace.jpg"
 ---
 
-## Preface
+todo:
 
-Privacy articles follow these four formulas.
+h2 *:font-bold
 
-> Breach at Lawncuttr leaks 7 million credit card numbers
 
-> WiFi-connected lawn mowers use liquid chromatography grass analysis
-> to predict income levels and personalize ads
 
-> Maximizing privacy, security, and anonymity with LawnVPN
+<h2 id="introduction" class="mt-0"><a href="#introduction">Introduction</a></h2>
 
-> DeLawning isn't enough: How to scramble your grass pheromones
-> with Gentoo SELinux
+French polymath Pierre-Simon Laplace supposed that, if you knew everything
+about a physical instant, then you could calculate the entire past and future.
 
-And readers of these articles generally come to three conclusions:
+Though such a being -- _"Laplace's Demon"_ -- is fundamentally impossible,
+the idea is very useful: if you (or a server in Dallas) knew all of that about
+customers, you'd make _fat cash_. Investments? Guaranteed. Terrorists?
+Predicted. Hidden criminals? Outed! The possibilities are endless.
 
-> It's fine, really. My bank app notifies me against identity fraud,
-> and my email has all my passwords -- only Saudi Arabian journalists
-> and stalker victims really need to care.
+Of course, you need to be very big, on the level of state and corporate, and
+have a lot of data points, on the level of telecommunications...
 
-> We're screwed. Not much we can do, even 90% privacy and security is
-> impossible anyways.
+Yeah, they've been doing it for fifty years.
 
-> Install Gentoo lmao. Just put in the effort, it's not that
-> hard -- if you give up, think again about whether you 'care'.
+- 1970: the NSA has major radio companies supply them
+  with "all incoming and outgoing US telephone calls and telegrams"
+  (Finley & Esposito, 2014, p. 186).
+- 2000s: Google becomes the vanguard of surveillance capitalism.
+  "...\[it\] was Google that recognized the gold dust in the detritus of its
+  interactions with its users... \[the\] data exhaust" recycled into
+  recursive learning (Zuboff, 2019, Part 1 Section 3).
+- 2013: Snowden blows the whistle on the NSA's incredibly deep,
+  warrantless spy campaign on its country's own citizens, in a move so famous
+  that John Oliver did a [comedy sketch](https://www.youtube.com/watch?v=XEVlyP4_11M)
+  on it.
 
-Now that we've summarized 100% of all inputs and outputs (no sarcasm here~)
-let's try to _slightly_ differ.
+...so what?
 
-Single-minded defeatist fearmongering is easy;
-technoelitist anarchic exclusionism is easy; selective,
-willful ignorance is easy.
+This is just another privacy article, isn't it? Privacy articles are _so predictable_:
 
-Keeping things palatable is hard.
+<div class="grid grid-cols-2 gap-2 *:p-2 *:border-2 *:border-[var(--white)] *:rounded-lg *:*:m-0">
+  <div>Breach at Lawncut Co. leaks 7 million credit card numbers</div>
+  <div>
+    WiFi-enabled lawn mowers use chemical analysis on grass to personalize ads
+  </div>
+  <div>Maximize privacy, security, and anonymity with LawnVPN!</div>
+  <div>
+    DeLawning isn't enough: How to scramble your grass pheromones with Tinfoil
+    Linux
+  </div>
+</div>
+
+and only three perspectives exist:
+
+<div class="grid grid-cols-2 gap-2 *:p-2 *:border-2 *:border-[var(--white)] *:rounded-lg *:*:m-0">
+  <div class="row-span-2">
+    It's fine, really. My bank app notifies me against identity fraud, and my
+    email has all my passwords -- only Saudi Arabian journalists and stalker
+    victims really need to care.
+    <br />
+    I'm pretty much safe!
+  </div>
+  <div>
+    We're screwed. Not much we can do, even 90% privacy and security is
+    impossible anyways.
+  </div>
+  <div>
+    Install Linux lmao. If you aren't even patient enough to set up Arkenfox
+    then think again about whether you 'care'.
+  </div>
+</div>
+
+All this data is just... harmless ad stuff, or criminal/dissenter-catching, and
+the occasional mistake -- it doesn't matter to me! It's all nebulous tech
+weirdo-ing. No one's _personally_ breaching my privacy, well, some big algorithm
+might be, but this _simply does not matter to the average Joe_.
+
+Let me ask a question.
+
+What kind of situation would it matter in?
+
+Let's think aloud.
+
+1. (U.S.) The opposite party comes into power, and renders something you're
+  doing as completely illegal. You worry about what you say or do.
+    - Eh. I'm an upstanding citizen!
+2. The data describes an incorrect or _extremely_ correct version of you.
+  Your social credit score/financial credit score is put at risk.
+    - Eh. I'm not in China!
+3. Humor changes. A joke you enjoyed in a prior decade is no longer acceptable
+  for employers.
+    - Eh, I keep my Facebook friends-only!
+4. You are from a disadvantaged neighborhood. Due to an issue, your grades are
+  reduced by an algorithmic grade predictor.
+    - Eh. Couldn't possibly happen. Even if it did, it'd be fixed quickly!
+5. Your Amazon Echo records extremely... _private_ information after randomly
+  turning on, and an outsourced listener verifies that the speech-to-text matches
+  the speech.
+    - Eh, they'd get sued anyway. Plus, Amazon Music is convenient!
+
+Laplace's Demon is deadbeat.
+
+In the US/UK, _all of that has happened_.
+
+## The purpose of this article
+
+Feel free to skip around, but below, I discuss the following:
+
+1. Privacy threats <a href="#threat-vectors">(skip to)</a> that have or are occurring, with sources. (Boring, but
+might be useful.)
+    - Some of these sources are scholarly or in book form. <br />
+      I really hope you
+      don't accidentally go to sites like Sci-Hub for free scholarly sources, or
+      sites like Anna's Archive or Library Genesis for free books,
+      because those sites are very safe and distribute knowledge; it's something
+      we don't want. Right mates?
+2. Methods of response. <a href="#what-do-i-do-now">(skip to)</a>
+    - This includes individuals, regardless of tech-savviness, and firms.
+
+Keeping things palatable is hard. I'll do my best to avoid fearmongering,
+defeatism, and absolutes. However, that means that some may respond with
+"They deserved that!" for differing privacy incidents listed under "All Oopsies".
 
 <details class="p-2 mr-8 border-2 border-[var(--white)] rounded-lg">
-  <summary>OK, so _what_ is this article about? (click to view)</summary>
-
-For the lazy, here's what my article is about. Feel free to skip around.
+  <summary>Note for students (click to view)</summary>
 
 <b>HISTORICAL CONTEXT:</b> Corporate digital surveillance capitalism since the
 2000s, along with state digital surveillance as illustrated by Snowden's 2013
@@ -66,59 +149,10 @@ privacy, regardless of background.
 
 </details>
 
-## Introduction
+## Threat vectors
 
-French polymath Pierre-Simon Laplace supposed that, if you knew everything
-about a physical instant, then you could calculate the entire past and future.
+- According to [Anselmi et al.](https://arxiv.org/html/2409.06203v1) ([pdf ver.](https://arxiv.org/pdf/2409.06203)), in a traffic analysis of Samsung and LG smart televisions, Automatic Content Recognition (ACR), second-party tracking "conducted directly by the smart TV platform via its operating system", "periodically captures frames (and/or audio), builds a fingerprint of the content, and then shares it... \[to match\] it against a database of known content", for the use of "personalized ads". "LG likely batches frames capured every 10 ms" and "Samsung... captures the frames every 500ms". Users of Samsung and LGTV must disable [6 to 11 options](https://arxiv.org/html/2409.06203v1#A0.T1).
+	- "Automatic Content Recognition (ACR) (Peterson, 2022) is widely used for second-party tracking in smart TVs. As shown in Figure 1, ACR periodically captures frames (and/or audio), builds a fingerprint of the content, and then shares it with an ACR server for matching it against a database of known content (e.g., movies, ads, live feed). When the fingerprint matches, ACR server can determine exactly what piece of content is being watched on the smart TV. This enables smart TV platforms like Samsung and LG to profile users into audience segments (Center, 2024; LG, 2022), which are then used to target personalized ads. Fingerprints in ACR are essentially hash of the content, which can be matched at the server-side to identify the content. However, the fact that the hash of content rather than raw content is sent to ACR servers does not necessarily make the data “anonymous” (Staff in the Office of Technology, 2024). Moreover, the viewing habits of a user is potentially identifying (Narayanan and Shmatikov, 2008)."
+	- Anselmi, G., Vekaria, Y., D'Souza, A., Callejo, P., Mandalari, A. M., & Shafiq, Z. (2024). Watching TV with the Second-Party: A First Look at Automatic Content Recognition Tracking in Smart TVs. _arXiv preprint arXiv:2409.06203_.
 
-Though such a being -- _"Laplace's Demon"_ -- is fundamentally impossible,
-the idea is very useful: if you (or a server in Dallas) knew all of that about
-customers, you'd make _fat cash_. Investments? Guaranteed. Terrorists?
-Predicted. Hidden criminals? Outed! The possibilities are endless.
-
-Of course, you need to be very big and have a lot of data points. So, to become
-the best predictor, the obvious Bigs -- state and corporate -- entered a race to
-milk the obvious Big Data pool -- telecommunications.
-
-And they helped each other do it.
-
-- As early as 1970, the NSA had major radio companies supply them
-  with "all incoming and outgoing US telephone calls and telegrams"
-  (Finley & Esposito, 2014, p. 186).
-- In the 2000s, surveillance capitalism formally skyrocketed; "Other search
-  engines had the chance... \[it\] was Google that recognized the gold dust in
-  the detritus of its interactions with its users" -- the "data exhaust" of
-  searchers recycled into recursive learning (Zuboff, 2019, Part 1 Section 3).
-- In 2013, Snowden revealed the depth of NSA's incredible
-  warrantless spy campaign on its country's own citizens. It was so famous that
-  John Oliver did a [comedy sketch](https://www.youtube.com/watch?v=XEVlyP4_11M)
-  on it.
-
-Okay... so they CAN get this. Sure, why not. But what will they even do with it?
-Just ad stuff, criminal-catching, and the occasional mistake, right?
-Well... let's think aloud.
-
-- (U.S.) The opposite party comes into power, and renders something you're
-  doing as completely illegal.
-- The data describes an incorrect or _extremely_ correct version of you.
-  Your social credit score/financial credit score is put at risk.
-- Humor changes. A joke you enjoyed in a prior decade is no longer acceptable
-  for employers.
-- You are from a disadvantaged neighborhood. Due to an issue, your grades are
-  reduced by an algorithmic grade predictor.
-- Your Amazon Echo records extremely private information after randomly
-  turning on, and an offsite listener verifies that the speech-to-text matches
-  the speech.
-
-Unfortunately, because Laplace's Demon is so deadbeat, all of these already
-happened.
-
-1. Abortion or certain forms of gun ownership
-2. Creditworthiness
-3. Cancellation, perhaps by employers
-4. Ofqual (UK)
-5. Amazon
-
-So what can we do?
-
-## Make a threat model
+## What do I do now?
