@@ -23,5 +23,5 @@ pnpm run dev
 
 ## licensing
 
-Code: GPLv3  
+Code: MIT (as MIT libraries are used)
 Creative content: CC BY-NC-SA 4.0
