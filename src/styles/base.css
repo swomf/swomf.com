@@ -87,7 +87,7 @@ body {
   } */
   .tooltip,
   .prose tooltip {
-    @apply text-yellow-300 relative underline decoration-dotted;
+    @apply text-yellow-300 relative underline decoration-dotted inline-block;
   }
   .tooltip tip-after,
   .prose tooltip tip-after {
