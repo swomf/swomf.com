@@ -6,3 +6,116 @@ tags:
 pubDate: "Nov 10 2024"
 heroImage: "/src/assets/images/mom-im-scared-of-the-stock-market.webp"
 ---
+
+import MatchTheMarket from "../../components/blog/mom-im-scared-of-the-stock-market/MatchTheMarket.astro";
+
+<div class="grid grid-cols-[9.25rem_1fr] pb-4">
+  <div class="font-bold">Target audience:</div>
+  {/* prettier-ignore */}
+  <div> 12+y/o humans who are nervous of or slightly clueless about investing in the stock market </div>
+  <div class="font-bold">tldr:</div>
+  <div>
+    <ul class="m-0 *:m-0 *:*:m-0">
+      {/* prettier-ignore */}
+      <li>
+        An index fund matches "the market",
+        <tooltip> such as the S&P500<tip-after>The
+        USA's top 500 "big" firms</tip-after></tooltip>.
+        Beating the market is very rare over the long-term.
+      </li>
+      <li>Short-term: Market is chaotic; Long-term: ~10%/yr profits.</li>
+      {/* prettier-ignore */}
+      <li>Find an index fund with a <tooltip>low expense ratio<tip-after>For
+      every dollar invested in some fund, you will pay _x_%
+      in management fees, eating at your interest gains.
+      Source: Wikipedia</tip-after></tooltip>, such as VOO.</li>
+      <li>
+        Beat initial fear by walking right into a bank and asking for free help
+        setting up a [Roth IRA](https://en.wikipedia.org/wiki/Roth_IRA). Beat
+        continued fear by ignoring stock news/personalities -- long-run indexing
+        ignores short-run chaos.
+      </li>
+    </ul>
+  </div>
+</div>
+
+<hr class="h-px mx-4 mt-10 bg-[var(--white)] border-0" />
+
+In 2022, [Frederick the Fish](https://www.youtube.com/watch?t=575&v=USKD3vPD6ZA) beat the [NASDAQ](https://en.wikipedia.org/wiki/Nasdaq_Composite) by 14% and a certain (idiotic)
+investment subreddit by $7k. <br />
+(At market opening, he went to either the left or right of his
+tank to buy some random stock.)
+
+In 2012, [Orlando the Cat](https://en.wikipedia.org/wiki/Jill_Insley) beat professional investors by 7.2%. <br />
+(He threw a [toy mouse](https://qz.com/47058/orlando-the-cat-has-a-better-chance-of-beating-the-stock-market-than-a-hedge-fund-manager) at a grid of stocks to communicate his superior intellect.)
+
+In Burton Malkiel's _A Random Walk Down Wall Street_ (1973), he generalized this phenomenon (see chapter 1):
+
+> ...a blindfolded monkey throwing darts at the stock listings could select a portfolio that would do just as well as one selected by the experts.
+
+Wow. Other than insulting Harvard finance guys,
+what does this all mean? If the pros are that bad at reliably
+predicting when the arrow goes up or down, even with their
+Sharpe ratios, betas, and $\sum$ equations, are us everyday
+investors doomed?
+
+{/* prettier-ignore */}
+Well, no. The big guys are trying to _beat_ the market.
+Matching the market is just the mediocre outcome.
+It's obvious and boring to them. But for us average people,
+whose understandings are clouded by all
+the <a href="#Aside 1" id="To aside 1">salesmen and YOLOers</a>, understanding and sticking to this mediocrity isn't a
+half-bad choice. This mediocrity is the only thing about
+stocks that I was ever taught. I'll try my best to be
+transparent about what I learned; hopefully it can help you.
+
+<div class="p-1 mr-8 border-2 border-[var(--white)] rounded-lg">
+
+As a primer, let's try matching the market together.
+
+<MatchTheMarket client:load />
+
+Try out numbers like 5, 10, and 30. See what gets positive
+and when?
+
+<span class="text-xs">
+  (Data source: [NYU
+  Stern](https://pages.stern.nyu.edu/~adamodar/New_Home_Page/datafile/histretSP.html)).{" "}
+  <br />I took the [geometric
+  average](https://en.wikipedia.org/wiki/Geometric_mean#Average_growth_rate) of
+  percentages over periods of time. Inflation is factored in by simple
+  subtractions ([Fisher
+  equation](https://en.wikipedia.org/wiki/Fisher_equation)).
+</span>
+
+</div>
+
+So, over the long run, stocks go up. Even with the -40% in some
+year, +50% in another, in the long run our worst growth isn't
+even negative.
+
+---
+
+Only a dozen good decisions. https://www.berkshirehathaway.com/letters/2022ltr.pdf
+
+---
+
+\*<span class="font-bold italic" id="Aside 1">Aside 1:</span> <a href="#To aside 1">(click to return)</a>
+
+I used to think investing was scary. Searching for advice made
+it spookier:
+
+| advice-giver                               | advice quality                                                                                                                                                                                                                        |
+| ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Wall Street Harvard ascot quadrillionaires | Where are they? Never met one, and my grandma's dog isn't working on his hedge fund manager network                                                                                                                                   |
+| Big investment TV people                   | They're getting paid to tell you stuff. If they were making enough bank, why would they need to work a TV role? Someone's getting away with something if we follow their advice -- when that happens, will we necessarily make money? |
+| Books                                      | How do I know which ones are garbage? Also they're too long.                                                                                                                                                                          |
+| Blog posts                                 | Okay, but who are you anyway? (How ironic that you're reading one.)                                                                                                                                                                   |
+| YouTubers                                  | Read the three lines above this one                                                                                                                                                                                                   |
+| WallStreetBets                             | They win big and lose big. A goldfish beat them                                                                                                                                                                                       |
+
+Of course, this article falls under "who even are you?", but
+I do my best to be transparent with direct,
+accessible citations. Perhaps an appeal to authority, but
+this article is based on a talk I had with an economics instructor
+(I will let their name stay private).
