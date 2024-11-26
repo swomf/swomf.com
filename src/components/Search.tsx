@@ -4,7 +4,7 @@ import { useState } from "react";
 // Configs fuse.js
 // https://fusejs.io/api/options.html
 const options = {
-  keys: ["props.title", "props.description"],
+  keys: ["props.title", "props.description", "props.tags"],
   includeMatches: true,
   minMatchCharLength: 2,
   threshold: 0.5,
