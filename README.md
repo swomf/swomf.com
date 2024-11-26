@@ -14,14 +14,16 @@ sometimes i write things
 **prettier (formatter)** i've used it before  
 **husky (commit hook)** i keep forgetting to prettier format
 
+## developing
+
 ```sh
-git clone https://codeberg.org/swomf/attempts
-cd attempts
+git clone https://github.com/swomf/swomf.com
+cd swomf.com
 pnpm i
 pnpm run dev
 ```
 
 ## licensing
 
-Code: MIT (as MIT libraries are used)
-Creative content: CC BY-NC-SA 4.0
+AGPLv3, with content under CC BY-NC-SA 4.0.
+See the LICENSES directory for more.
