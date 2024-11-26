@@ -1,4 +1,4 @@
-# attempts
+# swomf.com
 
 sometimes i write things
 
