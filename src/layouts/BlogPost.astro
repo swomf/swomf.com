@@ -4,6 +4,7 @@ import FormattedDate from "../components/FormattedDate.astro";
 import Tag from "../components/Tags.astro";
 import BaseLayout from "./BaseLayout.astro";
 import Img from "../components/Img.astro";
+import { SITE_TITLE } from "../consts";
 
 type Props = CollectionEntry<"blog">["data"];
 
@@ -11,7 +12,7 @@ const { title, description, tags, pubDate, updatedDate, heroImage } =
   Astro.props;
 ---
 
-<BaseLayout>
+<BaseLayout title={title.toLowerCase() + " | " + SITE_TITLE}>
   <article>
     <div class="rounded-3xl">
       {
