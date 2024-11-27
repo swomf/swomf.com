@@ -12,7 +12,16 @@ interface DataProps {
   marketData: MarketDataRow[];
 }
 
-function getExtremeReturns(
+/**
+ * Write the best, average, and worst returns for
+ * the user-entered holding period of _x_ years
+ * to an interactive chart
+ * @param marketData 
+ * @param holdForYears years to hold for. entered by user
+ * @param includeInflation checkbox to apply Fisher equation
+ * @returns 
+ */
+function getReturnStats(
   marketData: MarketDataRow[],
   holdForYears: number,
   includeInflation: boolean
@@ -135,7 +144,7 @@ function getExtremeReturns(
   );
 }
 
-function MatchTheMarketIsland({ marketData }: DataProps) {
+function MatchTheMarket({ marketData }: DataProps) {
   const [holdYear, setHoldYear] = useState(1);
   const [includeInflation, setIncludeInflation] = useState(false);
 
@@ -183,10 +192,10 @@ function MatchTheMarketIsland({ marketData }: DataProps) {
       </div>
       <p>
         Best returns:
-        {getExtremeReturns(marketData, holdYear, includeInflation)}
+        {getReturnStats(marketData, holdYear, includeInflation)}
       </p>
     </div>
   );
 }
 
-export default MatchTheMarketIsland;
+export default MatchTheMarket;
