@@ -7,8 +7,6 @@ pubDate: "Nov 10 2024"
 heroImage: "/src/assets/images/mom-im-scared-of-the-stock-market.webp"
 ---
 
-import MatchTheMarket from "../../components/blog/mom-im-scared-of-the-stock-market/MatchTheMarket.astro";
-
 <div class="grid grid-cols-[9.25rem_1fr] pb-4">
   <div class="font-bold">Target audience:</div>
   {/* prettier-ignore */}
@@ -73,7 +71,10 @@ transparent about what I learned; hopefully it can help you.
 
 As a primer, let's try matching the market together.
 
-<MatchTheMarket client:load />
+import MatchTheMarketIsland from "../../components/blog/mom-im-scared-of-the-stock-market/MatchTheMarket.tsx";
+import marketData from "../../components/blog/mom-im-scared-of-the-stock-market/MatchTheMarket.json";
+
+<MatchTheMarketIsland client:load marketData={marketData} />
 
 Try out numbers like 5, 10, and 30. See what gets positive
 and when?
